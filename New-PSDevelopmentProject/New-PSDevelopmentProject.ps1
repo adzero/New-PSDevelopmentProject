@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 1.0.0
+.VERSION 1.0.1
 
 .GUID 32d9b358-2002-4dbb-9393-d068333a60e6
 
@@ -95,6 +95,10 @@ Foreach($import in @($Public + $Private))
 }
 
 Export-ModuleMember -Function $Public.Basename'
+
+$Script:PS1XML_DEFAULT_CONTENT = '<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+</Types>'
 
 $Script:README = "# $Name
 
@@ -293,7 +297,7 @@ function New-PSDevelopmentProject
 		$codeFolder = New-ProjectItem -Directory -Path $path -Name $Name
 
 		##Types definition file
-		New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml"
+		New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:PS1XML_DEFAULT_CONTENT
 
 		##Bin and libraries folders
 		New-ProjectItem -Directory -Path $codeFolder -Name "lib"
@@ -303,7 +307,7 @@ function New-PSDevelopmentProject
 		if($PSCmdlet.ParameterSetName -eq "Module")
 		{
 			#Root module file
-			New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $ROOT_MODULE_CONTENT
+			New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $Script:ROOT_MODULE_CONTENT
 			#Getting current PowerShell Version
 			$version = $PSVersionTable.PSVersion | select -ExpandProperty Major
 
@@ -363,8 +367,8 @@ New-PSDevelopmentProject @PsBoundParameters
 # SIG # Begin signature block
 # MIIIqQYJKoZIhvcNAQcCoIIImjCCCJYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUZSbqeAKUTljBHxlV0B2xybAq
-# bWagggUwMIIFLDCCAxSgAwIBAgIQNC2Wu6czaZhGPNSKX+8pbjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU721rtuSLZOyxgdfYM45DYcgZ
+# V3GgggUwMIIFLDCCAxSgAwIBAgIQNC2Wu6czaZhGPNSKX+8pbjANBgkqhkiG9w0B
 # AQ0FADAuMSwwKgYDVQQDDCNBZFplcm8gUG93ZXJTaGVsbCBMb2NhbCBDZXJ0aWZp
 # Y2F0ZTAeFw0xNzEwMTQyMjAwMDBaFw0xODEyMzAyMjAwMDBaMC4xLDAqBgNVBAMM
 # I0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmljYXRlMIICIjANBgkqhkiG
@@ -395,17 +399,17 @@ New-PSDevelopmentProject @PsBoundParameters
 # ATBCMC4xLDAqBgNVBAMMI0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmlj
 # YXRlAhA0LZa7pzNpmEY81Ipf7yluMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEM
 # MQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
-# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSfzJa4KXMuZEXV
-# Hxi76Dw16bxNKzANBgkqhkiG9w0BAQEFAASCAgA3lW+opxO5VWS2IrSntCUU4yYg
-# L4ebe+DwzCQ5NP0dUG5MyZh+zgTfgFq8kts1OvU8h2fQg1rMbu4QppWG9ISqi+M+
-# tac3hOYtSnKtvL+XmLrKxcjhetNgy5HDkBCQKwlQPqFmkt8r5ng7lsHcnuJP3vez
-# X0wegmZYAuOzHF7ven2h8D0z6hA7nNWh85KYzF5W6X/KC6+RHRf5pUXJUmHZIyuN
-# JHWTb2CLLJwJSBZFVn+nBq+2jfY8hFeBCSEB/bm7M6feDh17pmtUiCbrgIu1BQx7
-# rQhu+IfiwLYn9WY5GKDew4kLK/NICprsspoUYVWQE8F9uB14CBaO9k30SLUeMtuS
-# Th0+KvfwuyZAg1PnwFv93It81atNOj28VAWUAXcGngJg9p0gWk4LZjlrNBiltQLl
-# VNCs9x6ff2KTaW4eNOJIFaCY3rwFfI5lbTTXQRqYdPt1UWJ+fAZDhRb1Y0GcoxAN
-# a48jmIN7TyjBS1Aa6Gq+LOlMaLNKrWgmWwBC8L/ysjCs+bk2V7qubNEbXxkoj+by
-# QMPp+AEXsnrg4f9+q5Z16Gst6kYwZ2HMi8tvCJE+LpIy3Ai9Yt+InKeqiThNx1Lw
-# 80jsCaRZTrUSonnZPZ8LCt+N9SKxUuA5YwvEk1LVQS+JhkUta9GhzAGTznJUiKt9
-# 66YtACJDwgofUVkvIQ==
+# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTwOL1WMmsKxMTb
+# 94XxaSpunWw0HzANBgkqhkiG9w0BAQEFAASCAgBaWpY8WU572m+IpDBF4qdXGTFm
+# PdaI27ibwVQY1ouAXBJZ43KoF/lwcbqw5L6gveDync81sMuLQEU7siybQ1LgeLQH
+# xImfIsoDzb3vxP1RUzXOtuuyPcNLMvD51voOfSRAOMPzRzHQM98vq5fD200IALYi
+# yncjnoT95lQxhnBkUy3aoRAKne08UJ6EpztWmphSJ2X2Om5tK71wz6y+5tvY6A30
+# kEH5Wa4yiCojeh5wQel7tPdlf0rPs7HY/ScpImDay0FsSbb07/dOTmXbFt+45jgv
+# SeJtAMCyfMDdhjs0SstfEC9o7gTx/iftAHpX5KeE2xpUSQe3kcpzbvpk8LESLg+b
+# 2GpUx0M8TiO/GBfyRCshgKbOnmRyu3iBbB5kk/0BDknLK9ugSWLEkNdH1kc4qwE9
+# i15wUs2KcpffIlUNbctyq6UDI7Vnsn/3Y0SlwUl4ou48xdsUJYayge9dBlp/JTux
+# scT7fxo0aSfutmiFPb8FMlYn/mEg09L0rB28MXzZqf+SkGaEOzjnEM+mjBnWxXpb
+# oP4GcmZSrIVQS5njUGis9ygPqOKZdxZNYiAOxxLkVy+Vejdow+8ZsxHNkIcOHohA
+# C85fXUxDAzOfRrT5kAGjK3J7LSB5cN6Ml7fnbkYamCtlHnDODgDSd+jYPYPaLsXJ
+# nE3C7NS6CZ4olzUYEA==
 # SIG # End signature block
