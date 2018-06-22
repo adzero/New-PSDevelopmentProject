@@ -12,3 +12,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Default ps1xml format definition file contains XML declaration and types root node.
+
+## [1.0.0] - 2018-06-16
