@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - In progress
 
+### Added
+
+- Option to disable automatic inclusion of the root folder corresponding to chosen project type.
+
 ### Changed
 
 - Source and tests folders renamed to src and tests.
@@ -14,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Changelog to track changes through versions
+- Changelog to track changes through versions.
 
 ### Changed
 

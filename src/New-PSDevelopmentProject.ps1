@@ -70,8 +70,9 @@ Param(
 	[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module')]
 	[switch]$ModuleProject,
 	[Parameter(HelpMessage='Use this option to create a new git repository for the project')]
-	[switch]$GitRepository
-)
+	[switch]$GitRepository,
+	[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path')]
+	[switch]$DisableProjectCategoryFolder)
 
 ##################################
 # Constants and global variables #
@@ -249,11 +250,19 @@ function New-PSDevelopmentProject
 		[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module')]
 		[switch]$ModuleProject,
 		[Parameter(HelpMessage='Use this option to create a new git repository for the project')]
-		[switch]$GitRepository
-	)
+		[switch]$GitRepository,
+		[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path')]
+		[switch]$DisableProjectCategoryFolder)
 
 	#Creating project root path
-	$path = (New-Item -Path $RootPath -Name (@{$true="Modules";$false="Scripts"}[$PSCmdlet.ParameterSetName -eq "Module"]) -ItemType Directory -Force).FullName
+	if(-not $DisableProjectCategoryFolder.IsPresent)
+	{
+		$path = (New-Item -Path $RootPath -Name (@{$true="Modules";$false="Scripts"}[$PSCmdlet.ParameterSetName -eq "Module"]) -ItemType Directory -Force).FullName
+	}
+	else
+	{
+		$path = $RootPath
+	}
 
 	#Creating directory structure
 	#Root directory
@@ -367,8 +376,8 @@ New-PSDevelopmentProject @PsBoundParameters
 # SIG # Begin signature block
 # MIILqgYJKoZIhvcNAQcCoIILmzCCC5cCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUFYQfhBOTjIp6n2B2EGIFuBcV
-# MN+gggggMIIIHDCCBgSgAwIBAgITLQAB8DuytSqV58vDWwABAAHwOzANBgkqhkiG
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUNiw+CnPgUAwT6Pp8osF+XGLR
+# a92gggggMIIIHDCCBgSgAwIBAgITLQAB8DuytSqV58vDWwABAAHwOzANBgkqhkiG
 # 9w0BAQ0FADA8MRIwEAYKCZImiZPyLGQBGRYCZnIxFDASBgoJkiaJk/IsZAEZFgRj
 # ZzY3MRAwDgYDVQQDEwdDRzY3IENBMB4XDTE0MDcyNDA3NDQxN1oXDTI0MDcyMTA3
 # NDQxN1owXDESMBAGCgmSJomT8ixkARkWAmZyMRQwEgYKCZImiZPyLGQBGRYEY2c2
@@ -415,17 +424,17 @@ New-PSDevelopmentProject @PsBoundParameters
 # 8ixkARkWAmZyMRQwEgYKCZImiZPyLGQBGRYEY2c2NzEQMA4GA1UEAxMHQ0c2NyBD
 # QQITLQAB8DuytSqV58vDWwABAAHwOzAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUljtUZgVTRCv6
-# CJx3vUc/1fA8EBQwDQYJKoZIhvcNAQEBBQAEggIAA9VwoBJp0uxL0d2qYYDgBD9d
-# 7P0a7OBDDitWN7ow2emMqXcwXddJANROFCR6209XK4Ku26pGmMTnlAzVFBZXWHOb
-# XDqmlWvD5hFPJfIhcfSUED5G1gzFmgBzytTXfzSBE84D2iJcDuYf+JxGb8mnmm4+
-# 7iP0JVx0R35vu9qGJmo3KGZgyzmq1vLn1oA15Q5cjqG6iJ05qf70OF/cghwke3q+
-# ougsSt8afAGhpy2Syj9aDm0etZ22Wqsx86rm2WR1uH071WUIsdYLLAx0kJRX/KTg
-# KEVmu69JTqQD1BAWAjeaC6+8eWciGct3bpLLBPrXJwMKRv2A1dogWyo6p83WHrvR
-# LbOQgukkqjbAQ6Noc4dzdzn+Esiyb8PIRcCl9BtoioqAddpEYeX9r+T7/55UhdWk
-# u/glgmHKIyeC8wOIclW5Q+gfGahMvX10LvnQcthRu+g9wWvanGR4ynEvQP2OCAvE
-# SFMbcvsCa06aTQCh3WdteXNHM68C0Ejij7XOgM7q7R2hgWb5dtrszN6T1A1LitsA
-# Wlp8NiHiWBs0BQaZHMe5rBxa+RTiNKDrXen/MsThSx4yAynOWG7Mf/EVW7iVyy1/
-# wJ+EUKawb+FT+oaVwDezuoB8+tmn7Sk/O8Imt64vGVJbTXqIg4tb7WiikG4xm89N
-# TTXziNbnFTe6fexsVK0=
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUGStIQUGl77Mm
+# VIE+NvRWbpLXO/QwDQYJKoZIhvcNAQEBBQAEggIAqaoVJ1AxhsvQfYOnQ9MibU88
+# BXDXD1Sy0ID6qOgkTAnKqJPZ+BazgdahC1zkcRRAzjC8tXl9A5EIqUsS7FM/v6hd
+# 9e4m/argfNK9x+LmKNc3YJZZVNXVuGgAvkRkBXIpFaekwJ4GB9zN3PeuQ3MpmoU3
+# WDpR9owcGSVLAlsVjkqSLXQ+/O/sGOL8NdwBfj0trbOa2O+13U4ru83zhclQH0Y7
+# JCl7gInc9VbgxK/k6Ru8UjFoHTWYDVNlGugqpMXEmA0ZUMKQRkDi+9L66F0nBfU5
+# X+of7t7wAuoJlCm0T3gLV/bYy+Kxa9z9LEiQ0zWYeQ5K/rHuNsePl5Iu1hE3vqQ+
+# 1yZzTMYaolVnWHtEPjj3kQJfKCmmQYkonnTBscgbSMmzt4lRUpo8ldTIQ6AHHo9a
+# Irj8Sw21pYr2sSlwJG5n1F2e7NkfThC1hD0CepS62qiKHRbkQL63Pg9Xee6E4JgZ
+# 1ANZezqOWlgrebx46+e43yC/cKAOJ2dfkOC7hsdqwbKWWLBjmsygGdSHbivvY+Es
+# NEv8NBy/azjd2BbGIVxZGa30kUM1Ah6yvWT8YQLvlv01pB1TkicOSlDJVUEOCHQ4
+# YBPCVUmpgVisKEHWQ1vYVOu/HdXgM128TKSavW6C+WT/h1QVnQXdMRjkx8DZjrIp
+# aHQiE5IQ7pkV3u89L9E=
 # SIG # End signature block
