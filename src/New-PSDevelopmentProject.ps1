@@ -1,120 +1,209 @@
-﻿
-<#PSScriptInfo
+﻿<#PSScriptInfo
 
-.VERSION 1.0.0
-
-.GUID 71cd4267-a18e-45d4-8cc0-a747aaea48a1
-
-.AUTHOR AdZero
-
-.COMPANYNAME
-
-.COPYRIGHT Copyright 2024 AdZero
-
-.TAGS
-
-.LICENSEURI
-
-.PROJECTURI
-
-.ICONURI
-
-.EXTERNALMODULEDEPENDENCIES 
-
-.REQUIREDSCRIPTS
-
-.EXTERNALSCRIPTDEPENDENCIES
-
-.RELEASENOTES
-
-
-.PRIVATEDATA
-
-#>
-
-<# 
-
-.DESCRIPTION 
- Creates a new file structure for the developement of a PowerShell script or module 
-
-#> 
-Param()
-
-
-<#PSScriptInfo
-
-.VERSION 1.0.0
+.VERSION 1.1.0
 
 .GUID 32d9b358-2002-4dbb-9393-d068333a60e6
 
-.AUTHOR AdZero (adzero.git@gmail.com)
+.AUTHOR AdZero
 
-.COMPANYNAME 
+.COMPANYNAME AdZero
 
-.COPYRIGHT Copyright 2018 AdZero
+.COPYRIGHT Copyright 2018-2021 AdZero
 
-.TAGS 
+.TAGS PowerShell GIT
 
-.LICENSEURI 
+.LICENSEURI https://raw.githubusercontent.com/adzero/New-PSDevelopmentProject/master/LICENSE
 
-.PROJECTURI 
+.PROJECTURI https://github.com/adzero/New-PSDevelopmentProject
 
-.ICONURI 
+.ICONURI https://raw.githubusercontent.comm/adzero/New-PSDevelopmentProject/master/images/adzero-avatar.png
 
-.EXTERNALMODULEDEPENDENCIES PowerShellGet
+.EXTERNALMODULEDEPENDENCIES
 
-.REQUIREDSCRIPTS 
+.REQUIREDSCRIPTS
 
 .EXTERNALSCRIPTDEPENDENCIES 
 
 .RELEASENOTES
 
+#>
+
+<#
+.SYNOPSIS
+Creates a new file structure for the developement of a PowerShell script or module. 
+
 .DESCRIPTION 
- Creates a new file structure for the developement of a PowerShell script or module. 
+Creates a new file structure for the developement of a PowerShell script or module. 
+
+.EXAMPLE
+PS> New-PSDevelopmentProject.ps1 -Name NewScriptProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ScriptProject -Author Adzero -Description "My awesome new PowerShell script project !"
+
+ 
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Scripts\NewScriptProject
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:19             85 README.md
+-a----        02/03/2021     19:19           1071 LICENSE
+
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Scripts\NewScriptProject\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:19             63 NewScriptProject.Format.ps1xml
+d-----        02/03/2021     19:19                lib
+d-----        02/03/2021     19:19                bin
+
+.EXAMPLE
+PS> New-PSDevelopmentProject.ps1 -Name NewModuleProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ModuleProject -Author Adzero -Description "My awesome new PowerShell module project !"
+
+
+    Directory: D:\Temp\Modules\NewModuleProject
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:23             85 README.md
+-a----        02/03/2021     19:23           1071 LICENSE
+
+
+    Directory: D:\Temp\Modules\NewModuleProject\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:23             63 NewModuleProject.Format.ps1xml
+d-----        02/03/2021     19:23                lib
+d-----        02/03/2021     19:23                bin
+-a----        02/03/2021     19:23            574 NewModuleProject.psm1
+d-----        02/03/2021     19:23                Private
+d-----        02/03/2021     19:23                Public
+
+
+    Directory: D:\Temp\Modules\NewModuleProject\src\en-US
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:23              0 about_NewModuleProject.help.txt
+
+.EXAMPLE
+PS> New-PSDevelopmentProject.ps1 -Name NewModuleGitProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ModuleProject -Author Adzero -Description "My awesome new PowerShell module project with a git repository !" -GitRepository
+
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Modules\NewModuleGitProject
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:28              0 .gitignore
+Initialized empty Git repository in C:/Users/adzero/Documents/WindowsPowerShell/Sources/Modules/NewModuleGitProject/.git/
+[master (root-commit) a1989f2] Repository creation
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 .gitignore
+-a----        02/03/2021     19:28            110 README.md
+-a----        02/03/2021     19:28           1071 LICENSE
+
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Modules\NewModuleGitProject\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:28             63 NewModuleGitProject.Format.ps1xml
+d-----        02/03/2021     19:28                lib
+d-----        02/03/2021     19:28                bin
+-a----        02/03/2021     19:28            574 NewModuleGitProject.psm1
+d-----        02/03/2021     19:28                Private
+d-----        02/03/2021     19:28                Public
+
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Modules\NewModuleGitProject\src\en-US
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:28              0 about_NewModuleGitProject.help.txt
+
+.PARAMETER Name
+New project name.
+
+.PARAMETER Author
+New project author.
+
+.PARAMETER Description
+New project description.
+
+.PARAMETER RootPath
+The root path where to create new project directory.
+
+.PARAMETER ScriptProject
+Use this option to create a project structure for a script.
+
+.PARAMETER ModuleProject
+Use this option to create a project structure for a module.
+
+.PARAMETER GitRepository
+Use this option to include a git repository for the project.
+
+.PARAMETER DisableProjectCategoryFolder
+ Use this option to not include Modules or Scripts folder in the project root path.
+
+.INPUTS
+None
+
+.OUTPUTS
+System.IO.FileInfo
+System.IO.DirectoryInfo
 
 #>
 [CmdletBinding(DefaultParameterSetName="Script")]
 Param(
-	[Parameter(ParameterSetName="Script", Position=0, Mandatory=$true, HelpMessage='New script name')]
-	[Parameter(ParameterSetName="Module", Position=0, Mandatory=$true, HelpMessage='New module name')]
-	[string]$Name,
-	[Parameter(ParameterSetName="Script", Position=1, Mandatory=$true, HelpMessage='New script author')]
-	[Parameter(ParameterSetName="Module", Position=1, Mandatory=$true, HelpMessage='New module author')]
-	[string]$Author,
-	[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New script description')]
-	[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New module description')]
-	[string]$Description,
-	[Parameter(Position=3, HelpMessage='The root path where to create new project directory')]
-	[ValidateScript({ 
-	
-	    if($_ -is [System.IO.FileSystemInfo])
-		{
-			$value = $_.FullName
-		}
-		elseif([System.IO.Path]::IsPathRooted($_))
-		{
-			$value = [string]$_
-		}
-		else
-		{
-			$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
-		}
+[Parameter(ParameterSetName="Script", Position=0, Mandatory=$true, HelpMessage='New project name.')]
+[Parameter(ParameterSetName="Module", Position=0, Mandatory=$true, HelpMessage='New project name.')]
+[string]$Name,
+[Parameter(ParameterSetName="Script", Position=1, Mandatory=$true, HelpMessage='New project author.')]
+[Parameter(ParameterSetName="Module", Position=1, Mandatory=$true, HelpMessage='New project author.')]
+[string]$Author,
+[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New project description.')]
+[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New project description.')]
+[string]$Description,
+[Parameter(HelpMessage='The root path where to create new project directory.')]
+[ValidateScript({ 
 
-		if(!(Test-Path -LiteralPath $value -PathType Container))
-		{
-			throw "Provided path is not a valid directory path: '$value'" 
-		}
-		
-		return $true
-	})]
-	$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
-	[Parameter(ParameterSetName="Script", Mandatory=$true, HelpMessage='Use this option to create a project structure for a script')]
-	[switch]$ScriptProject,
-	[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module')]
-	[switch]$ModuleProject,
-	[Parameter(HelpMessage='Use this option to create a new git repository for the project')]
-	[switch]$GitRepository
-)
+	if($_ -is [System.IO.FileSystemInfo])
+	{
+		$value = $_.FullName
+	}
+	elseif([System.IO.Path]::IsPathRooted($_))
+	{
+		$value = [string]$_
+	}
+	else
+	{
+		$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
+	}
+
+	if(!(Test-Path -LiteralPath $value -PathType Container))
+	{
+		throw "Provided path is not a valid directory path: '$value'" 
+	}
+	
+	return $true
+})]
+$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
+[Parameter(ParameterSetName="Script", Mandatory=$true, HelpMessage='Use this option to create a project structure for a script.')]
+[switch]$ScriptProject,
+[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module.')]
+[switch]$ModuleProject,
+[Parameter(HelpMessage='Use this option to include a git repository for the project.')]
+[switch]$GitRepository,
+[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path.')]
+[switch]$DisableProjectCategoryFolder)
 
 ##################################
 # Constants and global variables #
@@ -137,7 +226,16 @@ Foreach($import in @($Public + $Private))
 	}
 }
 
-Export-ModuleMember -Function $Public.Basename'
+Export-ModuleMember -Function $Public.Basename
+
+if($ExportPrivate)
+{
+	Export-ModuleMember -Function $Private.Basename
+}'
+
+$Script:PS1XML_DEFAULT_CONTENT = '<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+</Types>'
 
 $Script:README = "# $Name
 
@@ -288,11 +386,19 @@ function New-PSDevelopmentProject
 		[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module')]
 		[switch]$ModuleProject,
 		[Parameter(HelpMessage='Use this option to create a new git repository for the project')]
-		[switch]$GitRepository
-	)
+		[switch]$GitRepository,
+		[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path')]
+		[switch]$DisableProjectCategoryFolder)
 
 	#Creating project root path
-	$path = (New-Item -Path $RootPath -Name (@{$true="Modules";$false="Scripts"}[$PSCmdlet.ParameterSetName -eq "Module"]) -ItemType Directory -Force).FullName
+	if(-not $DisableProjectCategoryFolder.IsPresent)
+	{
+		$path = (New-Item -Path $RootPath -Name (@{$true="Modules";$false="Scripts"}[$PSCmdlet.ParameterSetName -eq "Module"]) -ItemType Directory -Force).FullName
+	}
+	else
+	{
+		$path = $RootPath
+	}
 
 	#Creating directory structure
 	#Root directory
@@ -318,8 +424,8 @@ function New-PSDevelopmentProject
 				$null = Set-Location $path -PassThru 2>$null
 				&git add . 2>$null
 				&git commit -m "Repository creation" 2>$null
-				&git branch "dev" 2>$null
-				&git checkout "dev" 2>$null
+				&git branch "develop" 2>$null
+				&git checkout "develop" 2>$null
 				$null = Set-Location $temp -PassThru | Out-Null
 			}
 			else
@@ -333,10 +439,10 @@ function New-PSDevelopmentProject
 		New-ProjectItem -File -Path $path -Name "LICENSE" -Content $Script:LICENSE
 
 		#Script/Module code directory tree
-		$codeFolder = New-ProjectItem -Directory -Path $path -Name $Name
+		$codeFolder = New-ProjectItem -Directory -Path $path -Name "src"
 
 		##Types definition file
-		New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml"
+		New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:PS1XML_DEFAULT_CONTENT
 
 		##Bin and libraries folders
 		New-ProjectItem -Directory -Path $codeFolder -Name "lib"
@@ -346,7 +452,7 @@ function New-PSDevelopmentProject
 		if($PSCmdlet.ParameterSetName -eq "Module")
 		{
 			#Root module file
-			New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $ROOT_MODULE_CONTENT
+			New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $Script:ROOT_MODULE_CONTENT
 			#Getting current PowerShell Version
 			$version = $PSVersionTable.PSVersion | select -ExpandProperty Major
 
@@ -372,7 +478,7 @@ function New-PSDevelopmentProject
 		}
 
 		#Tests directory
-		$childDirectory = New-ProjectItem -Directory -Path $path -Name "Tests"
+		$childDirectory = New-ProjectItem -Directory -Path $path -Name "tests"
 		New-ScriptFileInfo -Path (Join-Path -Path $childDirectory -ChildPath "$Name.Tests.ps1") -Version "1.0.0" -Author $Author -Description "Tests for $Name project"
 
 		#Add created directories and files to Git repository if enabled
