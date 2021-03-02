@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Source and tests folders renamed to src and tests.
+- Git repository 'dev' branch name changed with 'develop'.
 
 ## [1.0.1] - 2018-06-22
 

@@ -424,8 +424,8 @@ function New-PSDevelopmentProject
 				$null = Set-Location $path -PassThru 2>$null
 				&git add . 2>$null
 				&git commit -m "Repository creation" 2>$null
-				&git branch "dev" 2>$null
-				&git checkout "dev" 2>$null
+				&git branch "develop" 2>$null
+				&git checkout "develop" 2>$null
 				$null = Set-Location $temp -PassThru | Out-Null
 			}
 			else
