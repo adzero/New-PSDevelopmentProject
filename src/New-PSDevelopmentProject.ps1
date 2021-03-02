@@ -6,19 +6,19 @@
 
 .AUTHOR AdZero (adzero.git@gmail.com)
 
-.COMPANYNAME 
+.COMPANYNAME AdZero
 
 .COPYRIGHT Copyright 2018-2021 AdZero
 
 .TAGS PowerShell GIT
 
-.LICENSEURI 
+.LICENSEURI https://raw.githubusercontent.com/adzero/New-PSDevelopmentProject/master/LICENSE
 
-.PROJECTURI 
+.PROJECTURI https://github.com/adzero/New-PSDevelopmentProject
 
 .ICONURI 
 
-.EXTERNALMODULEDEPENDENCIES PowerShellGet
+.EXTERNALMODULEDEPENDENCIES
 
 .REQUIREDSCRIPTS
 
@@ -26,22 +26,153 @@
 
 .RELEASENOTES
 
+#>
+
+<#
+.SYNOPSIS
+Creates a new file structure for the developement of a PowerShell script or module. 
+
 .DESCRIPTION 
- Creates a new file structure for the developement of a PowerShell script or module. 
+Creates a new file structure for the developement of a PowerShell script or module. 
+
+.EXAMPLE
+PS> New-PSDevelopmentProject.ps1 -Name NewScriptProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ScriptProject -Author Adzero -Description "My awesome new PowerShell script project !"
+
+ 
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Scripts\NewScriptProject
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:19             85 README.md
+-a----        02/03/2021     19:19           1071 LICENSE
+
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Scripts\NewScriptProject\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:19             63 NewScriptProject.Format.ps1xml
+d-----        02/03/2021     19:19                lib
+d-----        02/03/2021     19:19                bin
+
+.EXAMPLE
+PS> New-PSDevelopmentProject.ps1 -Name NewModuleProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ModuleProject -Author Adzero -Description "My awesome new PowerShell module project !"
+
+
+    Directory: D:\Temp\Modules\NewModuleProject
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:23             85 README.md
+-a----        02/03/2021     19:23           1071 LICENSE
+
+
+    Directory: D:\Temp\Modules\NewModuleProject\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:23             63 NewModuleProject.Format.ps1xml
+d-----        02/03/2021     19:23                lib
+d-----        02/03/2021     19:23                bin
+-a----        02/03/2021     19:23            574 NewModuleProject.psm1
+d-----        02/03/2021     19:23                Private
+d-----        02/03/2021     19:23                Public
+
+
+    Directory: D:\Temp\Modules\NewModuleProject\src\en-US
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:23              0 about_NewModuleProject.help.txt
+
+.EXAMPLE
+PS> New-PSDevelopmentProject.ps1 -Name NewModuleGitProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ModuleProject -Author Adzero -Description "My awesome new PowerShell module project with a git repository !" -GitRepository
+
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Modules\NewModuleGitProject
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:28              0 .gitignore
+Initialized empty Git repository in C:/Users/adzero/Documents/WindowsPowerShell/Sources/Modules/NewModuleGitProject/.git/
+[master (root-commit) a1989f2] Repository creation
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 .gitignore
+-a----        02/03/2021     19:28            110 README.md
+-a----        02/03/2021     19:28           1071 LICENSE
+
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Modules\NewModuleGitProject\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:28             63 NewModuleGitProject.Format.ps1xml
+d-----        02/03/2021     19:28                lib
+d-----        02/03/2021     19:28                bin
+-a----        02/03/2021     19:28            574 NewModuleGitProject.psm1
+d-----        02/03/2021     19:28                Private
+d-----        02/03/2021     19:28                Public
+
+
+    Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Modules\NewModuleGitProject\src\en-US
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/03/2021     19:28              0 about_NewModuleGitProject.help.txt
+
+.PARAMETER Name
+New project name.
+
+.PARAMETER Author
+New project author.
+
+.PARAMETER Description
+New project description.
+
+.PARAMETER RootPath
+The root path where to create new project directory.
+
+.PARAMETER ScriptProject
+Use this option to create a project structure for a script.
+
+.PARAMETER ModuleProject
+Use this option to create a project structure for a module.
+
+.PARAMETER GitRepository
+Use this option to include a git repository for the project.
+
+.PARAMETER DisableProjectCategoryFolder
+ Use this option to not include Modules or Scripts folder in the project root path.
+
+.INPUTS
+None
+
+.OUTPUTS
+System.IO.FileInfo
+System.IO.DirectoryInfo
 
 #>
 [CmdletBinding(DefaultParameterSetName="Script")]
 Param(
-[Parameter(ParameterSetName="Script", Position=0, Mandatory=$true, HelpMessage='New script name')]
-[Parameter(ParameterSetName="Module", Position=0, Mandatory=$true, HelpMessage='New module name')]
+[Parameter(ParameterSetName="Script", Position=0, Mandatory=$true, HelpMessage='New project name.')]
+[Parameter(ParameterSetName="Module", Position=0, Mandatory=$true, HelpMessage='New project name.')]
 [string]$Name,
-[Parameter(ParameterSetName="Script", Position=1, Mandatory=$true, HelpMessage='New script author')]
-[Parameter(ParameterSetName="Module", Position=1, Mandatory=$true, HelpMessage='New module author')]
+[Parameter(ParameterSetName="Script", Position=1, Mandatory=$true, HelpMessage='New project author.')]
+[Parameter(ParameterSetName="Module", Position=1, Mandatory=$true, HelpMessage='New project author.')]
 [string]$Author,
-[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New script description')]
-[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New module description')]
+[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New project description.')]
+[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New project description.')]
 [string]$Description,
-[Parameter(HelpMessage='The root path where to create new project directory')]
+[Parameter(HelpMessage='The root path where to create new project directory.')]
 [ValidateScript({ 
 
 	if($_ -is [System.IO.FileSystemInfo])
@@ -65,13 +196,13 @@ Param(
 	return $true
 })]
 $RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
-[Parameter(ParameterSetName="Script", Mandatory=$true, HelpMessage='Use this option to create a project structure for a script')]
+[Parameter(ParameterSetName="Script", Mandatory=$true, HelpMessage='Use this option to create a project structure for a script.')]
 [switch]$ScriptProject,
-[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module')]
+[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module.')]
 [switch]$ModuleProject,
-[Parameter(HelpMessage='Use this option to create a new git repository for the project')]
+[Parameter(HelpMessage='Use this option to include a git repository for the project.')]
 [switch]$GitRepository,
-[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path')]
+[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path.')]
 [switch]$DisableProjectCategoryFolder)
 
 ##################################
@@ -381,8 +512,8 @@ New-PSDevelopmentProject @PsBoundParameters
 # SIG # Begin signature block
 # MIIIqQYJKoZIhvcNAQcCoIIImjCCCJYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUiEM0p/hFsIZfVbSYCtBGmKmH
-# u2KgggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUFiLmjJCW71tLIZVlZBOKfYPt
+# csOgggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
 # AQ0FADAuMSwwKgYDVQQDDCNBZFplcm8gUG93ZXJTaGVsbCBMb2NhbCBDZXJ0aWZp
 # Y2F0ZTAeFw0yMDAxMDYyMzAwMDBaFw0yNTEyMzAyMzAwMDBaMC4xLDAqBgNVBAMM
 # I0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmljYXRlMIICIjANBgkqhkiG
@@ -413,17 +544,17 @@ New-PSDevelopmentProject @PsBoundParameters
 # ATBCMC4xLDAqBgNVBAMMI0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmlj
 # YXRlAhBbrdcnzpVesE6t/rgdgp1WMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEM
 # MQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
-# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBR8ih6FaWiaEOYt
-# rMCwzJuSwYiDazANBgkqhkiG9w0BAQEFAASCAgBcq2bStC2tGIFHyIt7LJukMaM0
-# nFkQC4lrMmYczVgGUmSxbo8+808gXTeRls7/d+bO7BurVY4fufkMm872K6iuPtj2
-# xMuh2B8R1DUWQ0TlhBAcDbg874WeEwDD0jU4qR585JFbe7EPCieaaevwh31hFn8G
-# EFYno4/k532unWmyPUhznjVcGFE4nb8M2Tjn/0sCED8oC8YsBPLvZkQvzQ3WKJnT
-# zmIMV2+iLdiif4RKtslPaA3oA1ACT8Qmu/EGpZGA2byv3kSz3GrounuxDwdXAX3L
-# PBIjCiScDVRtPPebPPAkltj7/cSI2/lA3VJpRnVy/AazOI+sYOPbfZX7r5xUjK86
-# eS7U3OBYatu6EZR3B1PixtdiFxyurcxmZdbRMJYrPEWeugyoXz9Qv4aRtP1uw8mG
-# Mh1o9jRuyG+qCkT2eDchS3DChLdLdfeDDCVKupV1gdIdmFZRfuiv14/wbh2FOhJc
-# AVIn37wdEGGyirJtBBRcsGC2W5I4ELmPqvpE3W/PJVLPmr8ObVU4PFT56Gt0FOyU
-# YUvAIxdL+/gvIE1NPQN6J4vjbzXOvj7k5bowuvWUhlJO8TEqdRorubLsdNOoXR5w
-# PD5i+3DTQ7Atfcq5+0oxWTFg8s5qHsJhcnV6433DA+VqCr9VkqnWLdvO8f0/RnFh
-# Iztqoys0vONT+TM06Q==
+# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSJDQjZk3NX/8Pn
+# s9HgasEYmiaflTANBgkqhkiG9w0BAQEFAASCAgAQ2HbhRHBoTXZ1Rh1Ks4fAqtu8
+# eG32iUBgZRHz2LvxQ9bKbvBfI52fCJxNGx3289nhzYnyAGfZ3U7lGFGSiCCydvvp
+# vXsVrMq7Ldhv2Cybim7pkLgz2cxUZd/aMDHiZAHVfw/0HHwkhzgMIlqOV7kx+Uje
+# MKIS4g98c2j2fwczrpgxJWLBl/ICiilvFTgDZTTP8GeJFg9sve35kFosB/m7ry/8
+# SHphl7b0HHzb73wRiOlBcg0Ru5gCXOptv0XBwzi9c4TPxbZ2x+672YFmz39BHnU6
+# eCW8H9gBim+PJENGO1GKB+BU6PvAgSPs/zqWBWNtDxS7QIZuJTTH9+sxhcOkP+lV
+# 1mclQ4awium6ZonKEPzkON0RjZFdRd+Bv2vrXfCYwOJVz8UvwrkX+PgRcNI7SbPg
+# /cknnvOx9/W9mkshPTf5v0mRIsgiyu4eeVyhkykvluB+NJ4BrT8LehD6/8kmDV84
+# q0beh8Cy/+bsbzDY9bwgUzKPoxmyfOZQiTjZ47zqSuROhkN8B5PyM/G9/7vF+xlL
+# zLJpfdMCqd1d4mMKJviDM6ekd3vSM0CcPN930lo2VToNEI2Ff5pUScMroFQbq5IT
+# J3CaFIlH5PMrzESpZ7MrCW4J+BPgl9XAF94llFOAX6Tzrj7VN6aZWvH3FdHOXlXz
+# tPgNDu42jVtsIcqECA==
 # SIG # End signature block
