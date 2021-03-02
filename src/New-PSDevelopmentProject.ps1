@@ -1,4 +1,4 @@
-<#PSScriptInfo
+﻿<#PSScriptInfo
 
 .VERSION 1.1.0
 
@@ -20,7 +20,7 @@
 
 .EXTERNALMODULEDEPENDENCIES PowerShellGet
 
-.REQUIREDSCRIPTS 
+.REQUIREDSCRIPTS
 
 .EXTERNALSCRIPTDEPENDENCIES 
 
@@ -32,47 +32,47 @@
 #>
 [CmdletBinding(DefaultParameterSetName="Script")]
 Param(
-	[Parameter(ParameterSetName="Script", Position=0, Mandatory=$true, HelpMessage='New script name')]
-	[Parameter(ParameterSetName="Module", Position=0, Mandatory=$true, HelpMessage='New module name')]
-	[string]$Name,
-	[Parameter(ParameterSetName="Script", Position=1, Mandatory=$true, HelpMessage='New script author')]
-	[Parameter(ParameterSetName="Module", Position=1, Mandatory=$true, HelpMessage='New module author')]
-	[string]$Author,
-	[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New script description')]
-	[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New module description')]
-	[string]$Description,
-	[Parameter(HelpMessage='The root path where to create new project directory')]
-	[ValidateScript({ 
-	
-	    if($_ -is [System.IO.FileSystemInfo])
-		{
-			$value = $_.FullName
-		}
-		elseif([System.IO.Path]::IsPathRooted($_))
-		{
-			$value = [string]$_
-		}
-		else
-		{
-			$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
-		}
+[Parameter(ParameterSetName="Script", Position=0, Mandatory=$true, HelpMessage='New script name')]
+[Parameter(ParameterSetName="Module", Position=0, Mandatory=$true, HelpMessage='New module name')]
+[string]$Name,
+[Parameter(ParameterSetName="Script", Position=1, Mandatory=$true, HelpMessage='New script author')]
+[Parameter(ParameterSetName="Module", Position=1, Mandatory=$true, HelpMessage='New module author')]
+[string]$Author,
+[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New script description')]
+[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New module description')]
+[string]$Description,
+[Parameter(HelpMessage='The root path where to create new project directory')]
+[ValidateScript({ 
 
-		if(!(Test-Path -LiteralPath $value -PathType Container))
-		{
-			throw "Provided path is not a valid directory path: '$value'" 
-		}
-		
-		return $true
-	})]
-	$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
-	[Parameter(ParameterSetName="Script", Mandatory=$true, HelpMessage='Use this option to create a project structure for a script')]
-	[switch]$ScriptProject,
-	[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module')]
-	[switch]$ModuleProject,
-	[Parameter(HelpMessage='Use this option to create a new git repository for the project')]
-	[switch]$GitRepository,
-	[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path')]
-	[switch]$DisableProjectCategoryFolder)
+	if($_ -is [System.IO.FileSystemInfo])
+	{
+		$value = $_.FullName
+	}
+	elseif([System.IO.Path]::IsPathRooted($_))
+	{
+		$value = [string]$_
+	}
+	else
+	{
+		$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
+	}
+
+	if(!(Test-Path -LiteralPath $value -PathType Container))
+	{
+		throw "Provided path is not a valid directory path: '$value'" 
+	}
+	
+	return $true
+})]
+$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
+[Parameter(ParameterSetName="Script", Mandatory=$true, HelpMessage='Use this option to create a project structure for a script')]
+[switch]$ScriptProject,
+[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module')]
+[switch]$ModuleProject,
+[Parameter(HelpMessage='Use this option to create a new git repository for the project')]
+[switch]$GitRepository,
+[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path')]
+[switch]$DisableProjectCategoryFolder)
 
 ##################################
 # Constants and global variables #
@@ -379,67 +379,51 @@ function New-PSDevelopmentProject
 New-PSDevelopmentProject @PsBoundParameters
 
 # SIG # Begin signature block
-# MIILqgYJKoZIhvcNAQcCoIILmzCCC5cCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# MIIIqQYJKoZIhvcNAQcCoIIImjCCCJYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUqJ2tB29avcTnTIkZSaAmZPNB
-# BkOgggggMIIIHDCCBgSgAwIBAgITLQAB8DuytSqV58vDWwABAAHwOzANBgkqhkiG
-# 9w0BAQ0FADA8MRIwEAYKCZImiZPyLGQBGRYCZnIxFDASBgoJkiaJk/IsZAEZFgRj
-# ZzY3MRAwDgYDVQQDEwdDRzY3IENBMB4XDTE0MDcyNDA3NDQxN1oXDTI0MDcyMTA3
-# NDQxN1owXDESMBAGCgmSJomT8ixkARkWAmZyMRQwEgYKCZImiZPyLGQBGRYEY2c2
-# NzEaMBgGA1UECxMRU2VydmljZXMgQWNjb3VudHMxFDASBgNVBAMTC1NlcnZpY2VD
-# ZXJ0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwfnpyM9UcNFHTIjg
-# JuIlrIB440usbjELOXuUglFHc8UTNbAx4T4JLWIBEDkyWWb0okrFFLpj78FU2Scc
-# xY1lSsTvSJpN5u6kGSASJWxV7eK+N8i4fSupV62LzTGAekxb2i5qXIDu6Yycio24
-# 7tgb97RF/vPeC5j7KmIUW9wggedx29nIxGuq2r87ItXy9Rda+wUtFrl4wBLJo/+r
-# zjoNOoEkXKA+DW/q8H6FaaBRMi/0it/w8xMYuPaltgPhi9OVbviDZPcJOrCTzaWS
-# ZfyxEjDW9sVwi6qT0q+RGEC8MKoDeHIklKvU5vgCi1zrDk7W3F6J6FbVFUo7BpNp
-# 2I+B/U0gr17BjFKcjhp9UVxWki5VcJoGzXfZB4sttovh5uo8X4hIIi0b4m3SHVNC
-# TTDfn1Ss66Vy8GPK+gkQDp4uzFTnj3mR2V+r8iTAjj0GZT8dIMC2dmHddtoTZF1q
-# TieZexqlarLXOX6N23rUc059jl5I25avU9a7Z04J3e3RhlAq/KNvgDc92g5CbqJx
-# XGdpShzrRgdPOl4S3em7MNMSsQmsSvVz84euCdqWNEEsDb5Y2uG62qlH94t8pboe
-# EgH/s8CU4eWv+OkRhkWtbXTC9txuoo+Y6WgZi25xpNVcqFK9YAlhhxD3ATYq5w7+
-# GVVFLLrLAr4Fqrb5Y26QPebKnE0CAwEAAaOCAvUwggLxMD4GCSsGAQQBgjcVBwQx
-# MC8GJysGAQQBgjcVCIKKtR+B0u5sg82RD4Ta41CFl+l7gUaB5PBXh/ilAAIBZAIB
-# CDATBgNVHSUEDDAKBggrBgEFBQcDAzALBgNVHQ8EBAMCB4AwDAYDVR0TAQH/BAIw
-# ADAbBgkrBgEEAYI3FQoEDjAMMAoGCCsGAQUFBwMDMB0GA1UdDgQWBBSV1UGzJTwK
-# 1N32vu0VNQtMF+CTGjAfBgNVHSMEGDAWgBSqHlPNsEpk6WPFatxhTUD5SBi82DCB
-# 8AYDVR0fBIHoMIHlMIHioIHfoIHchoGqbGRhcDovLy9DTj1DRzY3JTIwQ0EoMSks
-# Q049Q0EsQ049Q0RQLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZp
-# Y2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Y2c2NyxEQz1mcj9jZXJ0aWZpY2F0ZVJl
-# dm9jYXRpb25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9p
-# bnSGLWh0dHA6Ly9DQS5jZzY3LmZyL0NlcnRFbnJvbGwvQ0c2NyUyMENBKDEpLmNy
-# bDCB/QYIKwYBBQUHAQEEgfAwge0wgaQGCCsGAQUFBzAChoGXbGRhcDovLy9DTj1D
-# RzY3JTIwQ0EsQ049QUlBLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNl
-# cnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Y2c2NyxEQz1mcj9jQUNlcnRpZmlj
-# YXRlP2Jhc2U/b2JqZWN0Q2xhc3M9Y2VydGlmaWNhdGlvbkF1dGhvcml0eTBEBggr
-# BgEFBQcwAoY4aHR0cDovL0NBLmNnNjcuZnIvQ2VydEVucm9sbC9DQS5jZzY3LmZy
-# X0NHNjclMjBDQSgxKS5jcnQwLwYDVR0RBCgwJqAkBgorBgEEAYI3FAIDoBYMFHNl
-# cnZpY2UuY2VydEBjZzY3LmZyMA0GCSqGSIb3DQEBDQUAA4ICAQBfxPOXbOtpvRDN
-# dzhEfhHJGmgirn2w1U4ASSdFggk1jB7GCACVoscHrxIUEt/kC3n0JAOVFEXzS2OY
-# fiqR7VjlElIYkj5A/Np4EYoqYaiVm5fTcCpvqhnYylCAT4B929fR2pZMdERmkW3F
-# tSQSxg++lUQhy1fJ00A99f/j1Uz7gCxp+NdbubyHyYEQkpFv0xtF4N+8zCre7Gp0
-# lJnxa/SiXwk+lLf+/rXXKeHD3njZRxDBz87NW7E3khPfHiRvApCCvbzMQwICbDq6
-# eYW/jPmAp0WCTHk/bDMhNPmQOYmGfAJzkoF/thDxywW16nZ4Db0yMyeKCWT2GFc/
-# SZD7QrSFR7utEbD2THfRZZb+ZmyJFE7UoWY7ziwVg3v3YqwmWMiIfhS6ZdTZoJuj
-# z6oIrE7Ztcnlr+vhhWRu05pU6qQZBkrDtNNhWg/vqOBP3kSIrewQGlM1U9JkrcxR
-# IH4RDsEvmwsfHeyylZJZnbbDWERkWJIgvz2VZbMZD3hjqh2pVbXFjBADsNGhzPat
-# h+oJlzVMawoNyOqt9n8unpQCR9fzQXjEflkN4dMjktL7lHO+IZDEVGx6DrsgZW4v
-# Q6XoR9FmrSGgs0T7jjj69BtIIty7wiiKz4FWQf8Uw4irBcm0cXZoMN1OXqMiEk2R
-# RcFScqXqOjTjCwLpQVjqTABYZHCe1zGCAvQwggLwAgEBMFMwPDESMBAGCgmSJomT
-# 8ixkARkWAmZyMRQwEgYKCZImiZPyLGQBGRYEY2c2NzEQMA4GA1UEAxMHQ0c2NyBD
-# QQITLQAB8DuytSqV58vDWwABAAHwOzAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
-# DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUKgYG10AcIQED
-# iPY90Fko7o7kWAEwDQYJKoZIhvcNAQEBBQAEggIAMBaurWPYx4RWMj6OGbmafTBJ
-# 9aKSjBLxL92re29fSbtYIxM/+08KxD030DIfdOcIYpXX+BnfJ3lThweJTWV0g1KZ
-# 7rENEqbTkqaiHGJuOjHoFb1GaTlmhnp3APHS1Ytmx50GT5mZvqnluT8d5wSuBHzp
-# Mc6ddvpYMkQ1BT8B0kLh3onMse14/KfzKVeR4k6BHbrDVPOZHx07ktglCRhFMPrP
-# r7H4urC4vxUFYEXCiXh6xVHvSMamc30HqA2Yrd7mEnWJGUo+qhGM4MaPl9dUnVB5
-# hsl+RtZGnxXPfYv6V5UIVIRp/5e4XFOhFqt1eJP7LSR4Rqe27pMFSwBNiebs3sdm
-# IPW8m8HN3OMoHP02TtJdhU7dPoJUqrFzsrJhmUqrRPEBnFqeymxLRaWPI0pGbfkv
-# X4qLcuh+oCtaMkgqkFRDTN4BjxMpmAtois61ZXtAxtL9BJX02U68ZCZifw/XNE/p
-# i6k6twVCi5R7gzDGZpf9nUoE0960PCy3JSHxNN6cTwP7inCtmZKN2+fLqyvNS72b
-# DIMN+DR+DCfsksVmqZhsZbCV7Rvv+2mluUVNOh7nH41i1xOri2HrfqAHfnCgGMMB
-# G5fKkho00HiJXX6iZEbLqXeA9DK4YCc54UGp1HUJ1M91I26zOBNdJO6fV/DKp6qJ
-# MzGu2rOtuYeVdR8Vk4U=
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUiEM0p/hFsIZfVbSYCtBGmKmH
+# u2KgggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
+# AQ0FADAuMSwwKgYDVQQDDCNBZFplcm8gUG93ZXJTaGVsbCBMb2NhbCBDZXJ0aWZp
+# Y2F0ZTAeFw0yMDAxMDYyMzAwMDBaFw0yNTEyMzAyMzAwMDBaMC4xLDAqBgNVBAMM
+# I0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmljYXRlMIICIjANBgkqhkiG
+# 9w0BAQEFAAOCAg8AMIICCgKCAgEAsKSGndXWnvczniCJM5x2ErFwKWPufBqG2hQT
+# NU/hxjQjOEfv7EewowFCf8hm0OQjNbn4Bv8LtwQCsN2r+iM+CScJ/mipyEpzvG9T
+# q6Hf4jybgBSYH8G5mWUym3LsrlFUt1A5FvfuJbPNNWkoGY6sgG7NTqEICLS46/Zc
+# n9GWNiYoIcMXdouMwWHsYLWnhKSfyE077brSmd4mJFym4OUy5tNiBjyiaEawZ6fE
+# vINXJghk2PfUUYjqBs/10AH75N8AjaBieBiQaZj98LAHJYis618Os/QxR4moRjGG
+# oMikBJMRWmC4ijrONFZsbchyxd/6gXLnUAcB1/F4g1VAXJZ3gPsRja1ItsxNuAcA
+# NEXRt34RKK+ayDul4mHvYy7X4+J88qB//p7ENrA+d1l2GM9GJhzemmgZUVv9Sx39
+# r45VF7zRRluCIRsmOREAKmiqRU6y6xdSp/Fmf0cWt2bBgvqJ5+j4cRHv4KI0veLP
+# SBWRFplbr+emxrhbMHI9m+/RHiT2BI9jBX9awXnaxcYH8IQN87CA/L4y/AhRLsuU
+# +zwaZ5YCyyi3VeAUfMCnJq/1Gfa+gUO2xfWcavVjcSgMatrktSNyCLURSD9OS/89
+# 4kBS2EO5lzvOUKDrE3LfDHORsbhpk7MbP/+TOnSL6heBplT6RE1Voql1k0IoTqyW
+# TtD1YA0CAwEAAaNGMEQwDgYDVR0PAQH/BAQDAgeAMBMGA1UdJQQMMAoGCCsGAQUF
+# BwMDMB0GA1UdDgQWBBRkZ706baqI0oKHJiJwnYJW+FT2rDANBgkqhkiG9w0BAQ0F
+# AAOCAgEAGkzJAIBdoCtUDV9Hz4bqllZ5X4SEEFk3WvlwqLz7S5FyiRFGzaBRfIoJ
+# XTwzczUXxr8UOhN90zBvkPoF+9pJccIEoXs3VuBK/jiv+WQJZtD2qpvmz5ZJMU3G
+# f/mwlDAc/Vof3GJmCIJ/5A4gVRu4j07tH/XWOyfYJEMIBPFOUsBnJCYZzlbKGXoU
+# hDQHLwsDB5Z/+4TwLZPSG3fkUewuTyaqLPotarh6EEWcf6Bxrtwr2SEIwpbshRb5
+# 1T8e2JRDAPFMM49kVqv5IiHq3Zrws4LFDZsXCuYaDABw4B7nDx1GP8En7+hGlVvn
+# Jhr1kr11yrwo4yr9RPvDLIQRNFrvkwwEcwBrGTXuydCNkd+P+knCDLR7T6B38i6o
+# WSiqleN0GgUYddT5s7kSPYjPbQD5ChheHYSTAiJBNvip+UBkTYsj9sxYz7sajmP0
+# vWhuXNqMgOj49KYJ3Q348Z93cMSBUZ4DYQoHToHtf9fXzHQGZtAOasDYayhUh08b
+# 1pr/zikZKfzH4Afgj5ffHLifxmWTUsocsIrXmkgScKDizW+vONhiljmS8FxacZmm
+# Xm+q+cDJ+2CrzlQSyPWN5f5r1DzyxC+7SA9uRfQi1meDSo0W9jrsKx+1IBE6D1DY
+# l/km38aF2oeAPBhn/43itNPYg2yP+nvWt/Fodn/t7BBk8upTPFYxggLjMIIC3wIB
+# ATBCMC4xLDAqBgNVBAMMI0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmlj
+# YXRlAhBbrdcnzpVesE6t/rgdgp1WMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEM
+# MQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
+# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBR8ih6FaWiaEOYt
+# rMCwzJuSwYiDazANBgkqhkiG9w0BAQEFAASCAgBcq2bStC2tGIFHyIt7LJukMaM0
+# nFkQC4lrMmYczVgGUmSxbo8+808gXTeRls7/d+bO7BurVY4fufkMm872K6iuPtj2
+# xMuh2B8R1DUWQ0TlhBAcDbg874WeEwDD0jU4qR585JFbe7EPCieaaevwh31hFn8G
+# EFYno4/k532unWmyPUhznjVcGFE4nb8M2Tjn/0sCED8oC8YsBPLvZkQvzQ3WKJnT
+# zmIMV2+iLdiif4RKtslPaA3oA1ACT8Qmu/EGpZGA2byv3kSz3GrounuxDwdXAX3L
+# PBIjCiScDVRtPPebPPAkltj7/cSI2/lA3VJpRnVy/AazOI+sYOPbfZX7r5xUjK86
+# eS7U3OBYatu6EZR3B1PixtdiFxyurcxmZdbRMJYrPEWeugyoXz9Qv4aRtP1uw8mG
+# Mh1o9jRuyG+qCkT2eDchS3DChLdLdfeDDCVKupV1gdIdmFZRfuiv14/wbh2FOhJc
+# AVIn37wdEGGyirJtBBRcsGC2W5I4ELmPqvpE3W/PJVLPmr8ObVU4PFT56Gt0FOyU
+# YUvAIxdL+/gvIE1NPQN6J4vjbzXOvj7k5bowuvWUhlJO8TEqdRorubLsdNOoXR5w
+# PD5i+3DTQ7Atfcq5+0oxWTFg8s5qHsJhcnV6433DA+VqCr9VkqnWLdvO8f0/RnFh
+# Iztqoys0vONT+TM06Q==
 # SIG # End signature block
