@@ -16,7 +16,7 @@
 
 .PROJECTURI https://github.com/adzero/New-PSDevelopmentProject
 
-.ICONURI 
+.ICONURI https://raw.githubusercontent.comm/adzero/New-PSDevelopmentProject/master/images/adzero-avatar.png
 
 .EXTERNALMODULEDEPENDENCIES
 
