@@ -1,68 +1,25 @@
-﻿
-<#PSScriptInfo
+﻿<#PSScriptInfo
 
-.VERSION 1.0.0
-
-.GUID abb5153e-e27f-4f7e-8e5b-b85ccefd1e0e
-
-.AUTHOR AdZero
-
-.COMPANYNAME
-
-.COPYRIGHT
-
-.TAGS
-
-.LICENSEURI
-
-.PROJECTURI
-
-.ICONURI
-
-.EXTERNALMODULEDEPENDENCIES 
-
-.REQUIREDSCRIPTS
-
-.EXTERNALSCRIPTDEPENDENCIES
-
-.RELEASENOTES
-
-
-.PRIVATEDATA
-
-#>
-
-<# 
-
-.DESCRIPTION 
- Tests for New-PSDevelopmentProject project 
-
-#> 
-Param()
-
-
-
-<#PSScriptInfo
-
-.VERSION 1.0.0
+.VERSION 1.1.0
 
 .GUID 00fe9040-1bc7-4862-9e45-e0a59c005d65
 
 .AUTHOR AdZero
 
-.COMPANYNAME 
+.COMPANYNAME AdZero
 
-.COPYRIGHT 
+.COPYRIGHT Copyright 2018-2021 AdZero
 
-.TAGS 
+.TAGS New-PSDevelopmentProject Test Pester
 
-.LICENSEURI 
+.LICENSEURI https://raw.githubusercontent.com/adzero/New-PSDevelopmentProject/master/LICENSE
 
-.PROJECTURI 
+.PROJECTURI https://github.com/adzero/New-PSDevelopmentProject
 
-.ICONURI 
+.ICONURI https://raw.githubusercontent.comm/adzero/New-PSDevelopmentProject/master/images/adzero-avatar.png
 
 .EXTERNALMODULEDEPENDENCIES 
+ Pester
 
 .REQUIREDSCRIPTS 
 
@@ -70,8 +27,9 @@ Param()
 
 .RELEASENOTES
 
-
 #>
+
+#Requires -Module Pester
 
 <# 
 
@@ -83,7 +41,7 @@ $here = (Get-Item (Split-Path -Parent $MyInvocation.MyCommand.Path)).Parent.Full
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 $name = (Get-Item (Split-Path -Parent $MyInvocation.MyCommand.Path)).Parent.Name
 
-$Script:scriptPath = "$here\$name\$sut"
+$Script:scriptPath = "$here\src\$sut"
 $Script:testPath = Join-Path -Path $env:TEMP -ChildPath ([Guid]::NewGuid().ToString())
 
 Describe "New-PSDevelopmentProject | Test script project creation" {
@@ -107,22 +65,22 @@ Describe "New-PSDevelopmentProject | Test script project creation" {
 		}
 		
 		It "Check test script project code directory" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject") -PathType Container| Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src") -PathType Container| Should -Be $true
 		}
 
 		It "Check test script project code directory default content" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject\TestScriptProject.ps1") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject\TestScriptProject.Format.ps1xml") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject\lib") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject\bin") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\TestScriptProject.ps1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\TestScriptProject.Format.ps1xml") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\lib") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\bin") -PathType Container | Should -Be $true
 		}
 
 		It "Check test script project Pester tests directory" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\Tests") -PathType Container| Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\tests") -PathType Container| Should -Be $true
 		}
 
 		It "Check test script project Pester tests directory default content" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\Tests\TestScriptProject.Tests.ps1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\tests\TestScriptProject.Tests.ps1") -PathType Leaf | Should -Be $true
 		}
 		
 		BeforeAll {
@@ -157,22 +115,22 @@ Describe "New-PSDevelopmentProject | Test script project creation" {
 		}
 		
 		It "Check test script project code directory" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject") -PathType Container| Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src") -PathType Container| Should -Be $true
 		}
 
 		It "Check test script project code directory default content" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject\TestScriptProject.ps1") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject\TestScriptProject.Format.ps1xml") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject\lib") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\TestScriptProject\bin") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\TestScriptProject.ps1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\TestScriptProject.Format.ps1xml") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\lib") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\bin") -PathType Container | Should -Be $true
 		}
 
 		It "Check test script project Pester tests directory" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\Tests") -PathType Container| Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\tests") -PathType Container| Should -Be $true
 		}
 
 		It "Check test script project Pester tests directory default content" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\Tests\TestScriptProject.Tests.ps1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\tests\TestScriptProject.Tests.ps1") -PathType Leaf | Should -Be $true
 		}
 		
 		It "Check test script project git repository directory" {
@@ -215,27 +173,27 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 		}
 		
 		It "Check test module project code directory" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject") -PathType Container| Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src") -PathType Container| Should -Be $true
 		}
 
 		It "Check test module project code directory default content" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\TestModuleProject.psm1") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\TestModuleProject.psd1") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\TestModuleProject.Format.ps1xml") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\Public") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\Private") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\lib") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\bin") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\en-US") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\en-US\about_TestModuleProject.help.txt") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.psm1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.psd1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.Format.ps1xml") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Public") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Private") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\lib") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\bin") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\en-US") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\en-US\about_TestModuleProject.help.txt") -PathType Leaf | Should -Be $true
 		}
 
 		It "Check test module project Pester tests directory" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\Tests") -PathType Container| Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\tests") -PathType Container| Should -Be $true
 		}
 
 		It "Check test module project Pester tests directory default content" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\Tests\TestModuleProject.Tests.ps1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\tests\TestModuleProject.Tests.ps1") -PathType Leaf | Should -Be $true
 		}
 		
 		BeforeAll {
@@ -270,27 +228,27 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 		}
 		
 		It "Check test module project code directory" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject") -PathType Container| Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src") -PathType Container| Should -Be $true
 		}
 
 		It "Check test module project code directory default content" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\TestModuleProject.psm1") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\TestModuleProject.psd1") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\TestModuleProject.Format.ps1xml") -PathType Leaf | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\Public") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\Private") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\lib") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\bin") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\en-US") -PathType Container | Should -Be $true
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\TestModuleProject\en-US\about_TestModuleProject.help.txt") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.psm1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.psd1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.Format.ps1xml") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Public") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Private") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\lib") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\bin") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\en-US") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\en-US\about_TestModuleProject.help.txt") -PathType Leaf | Should -Be $true
 		}
 
 		It "Check test module project Pester tests directory" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\Tests") -PathType Container| Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\tests") -PathType Container| Should -Be $true
 		}
 
 		It "Check test module project Pester tests directory default content" {
-			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\Tests\TestModuleProject.Tests.ps1") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\tests\TestModuleProject.Tests.ps1") -PathType Leaf | Should -Be $true
 		}
 		
 		It "Check test module project git repository directory" {
