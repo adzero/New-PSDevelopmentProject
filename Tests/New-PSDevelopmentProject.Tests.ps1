@@ -1,5 +1,4 @@
-﻿
-<#PSScriptInfo
+﻿<#PSScriptInfo
 
 .VERSION 1.1.0
 
@@ -19,7 +18,8 @@
 
 .ICONURI 
 
-.EXTERNALMODULEDEPENDENCIES Pester
+.EXTERNALMODULEDEPENDENCIES 
+ Pester
 
 .REQUIREDSCRIPTS 
 
@@ -28,6 +28,8 @@
 .RELEASENOTES
 
 #>
+
+#Requires -Module Pester
 
 <# 
 
@@ -39,7 +41,7 @@ $here = (Get-Item (Split-Path -Parent $MyInvocation.MyCommand.Path)).Parent.Full
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 $name = (Get-Item (Split-Path -Parent $MyInvocation.MyCommand.Path)).Parent.Name
 
-$Script:scriptPath = "$here\$name\$sut"
+$Script:scriptPath = "$here\src\$sut"
 $Script:testPath = Join-Path -Path $env:TEMP -ChildPath ([Guid]::NewGuid().ToString())
 
 Describe "New-PSDevelopmentProject | Test script project creation" {
@@ -271,8 +273,8 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 # SIG # Begin signature block
 # MIIIqQYJKoZIhvcNAQcCoIIImjCCCJYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU8dhtU9LFaI2ydv8xD7iw6PaQ
-# UHKgggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU5OeMkdrsrfQFlTBlliQ0b3ro
+# 0+KgggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
 # AQ0FADAuMSwwKgYDVQQDDCNBZFplcm8gUG93ZXJTaGVsbCBMb2NhbCBDZXJ0aWZp
 # Y2F0ZTAeFw0yMDAxMDYyMzAwMDBaFw0yNTEyMzAyMzAwMDBaMC4xLDAqBgNVBAMM
 # I0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmljYXRlMIICIjANBgkqhkiG
@@ -303,17 +305,17 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 # ATBCMC4xLDAqBgNVBAMMI0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmlj
 # YXRlAhBbrdcnzpVesE6t/rgdgp1WMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEM
 # MQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
-# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBS+cTlbpHs4tQ8P
-# M/H3z3FfpyKvPDANBgkqhkiG9w0BAQEFAASCAgCadfriXY/4SEvLtHlBf/b95gTP
-# Pbz2d/jZmCgn5pt6JP6QcSCbiGgHH397d0vmhET8HVGLyW0HK6wmRqAKtZUgbC5a
-# PISRe4CB8rmb7KA+FHbvMZA/u/P4gvnqGvBr2+mnZldllX9kR9ey6EAPoBu8JO5M
-# pAXSjUp5EEIN22rzpzUFCr55diF13o20/1tQxONfiCStBQL5x5NAF7nUBT8d+Rxh
-# Igbb2PShtLdEOcaFl5WxyB13FNAOz1sffQRHQ7hwD6At8hnIN7KR6TpX1T4KEFKz
-# BmjB7qqPZrvJKQI1QiNqyoh/CF2QaLDwc3HJu0P+WIDP6LLu0Cs6ofp7N7SEsqqt
-# WhljUp7V9zNNfD8ccJRmrHBu6RR6yNL+KsrSDUz4e346G1miM/qG3dUT0fG2Ykl9
-# RplGDXU1rHjkylKLuCmXNvXJ9NtBR9A1ulNk4k5uoZQ/az78IvgiFATfgAXbRyU/
-# fAcIU9mo186PtKhK7eqfIBx/BxzM0J03yCiPU1kz6nvE1WQgyTpPTFY3Cw7xwDeg
-# TLBmRdZ2PKyOwgwasbiy7u1gfWTTiJVaVqGWgN36/qWZy7YCWmx8o02wpGO9VqOU
-# dyiELvnv4jovrMFNiK36hbMfSd6OnhScYM81FW4GlOArq7Tu92tFwik1vRdc7LVZ
-# tq6Sd7Pem62K/1IwRg==
+# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBQgklTLGRVjKj0h
+# VJBAcLGku7fmTDANBgkqhkiG9w0BAQEFAASCAgCv/JBXiv5eCe/LCnodtv1X98y5
+# oUpnw2wXdQ7vEQRy10bP4F5+6Ow3XSwN6aG9Z2gqmEUbZQwlwn08io7Sc1jIhvpU
+# y5zQRQjf89O9kpmoem9hbpwfqYwK4RLpCuewgtUH0GL65ZgfkJXL12kzSNAEgBbI
+# +TQqgjBbD2Ojooz2hWkKGmIXFyBTct/xWwSNpQJLl3uPBCxYBmky26mPBGOYq4CL
+# 8nHfonvje3AnYYZLEbjJVywr9U5w7gPrJ9EimChjKiCwNL3BW1mlR1mrOcmUjz0q
+# WJ7esNtC65nrV8C+jZdjDPz0/x3vD767kKD42aMdbu8yr/RcvucUu9kg04k30530
+# +uiPsLrn4fldSEc/iviEJeXHb4T5WFfd4Ilj0TB8c3ufrZm2sfiM1Rzv1Vg/V1s5
+# l4o3mhJb1n9KiJ+5J89+HMrvLCqZl9AiSVW8MdVTksntsDXCcYkDI6kLGveyavua
+# UhCc3d4+F+Eg9XhUdfkZ69RED02G7THN2OWsg6jxvVD9hHylCtfl0tJnG96tzx6j
+# rfd0DXfmcrxkRycmukgRghBLRijQN50HJ0c0mKKEZ8rTyc7v9QQlmgBaWrjiP1wO
+# IaIS0z+go79rE3DTCxEEgK4ggQy1beJ32GKdVN+SakOOZ+m3UM8/WwAXXtOA4zFb
+# 5Nd5STP2tJnxiYHP4w==
 # SIG # End signature block
