@@ -6,17 +6,17 @@
 
 .AUTHOR AdZero
 
-.COMPANYNAME 
+.COMPANYNAME AdZero
 
 .COPYRIGHT Copyright 2018-2021 AdZero
 
-.TAGS 
+.TAGS New-PSDevelopmentProject Test Pester
 
-.LICENSEURI 
+.LICENSEURI https://raw.githubusercontent.com/adzero/New-PSDevelopmentProject/master/LICENSE
 
-.PROJECTURI 
+.PROJECTURI https://github.com/adzero/New-PSDevelopmentProject
 
-.ICONURI 
+.ICONURI https://raw.githubusercontent.comm/adzero/New-PSDevelopmentProject/master/images/adzero-avatar.png
 
 .EXTERNALMODULEDEPENDENCIES 
  Pester
@@ -273,8 +273,8 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 # SIG # Begin signature block
 # MIIIqQYJKoZIhvcNAQcCoIIImjCCCJYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU5OeMkdrsrfQFlTBlliQ0b3ro
-# 0+KgggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUSyedCtgPu16a/grwg34ezcCM
+# rpigggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
 # AQ0FADAuMSwwKgYDVQQDDCNBZFplcm8gUG93ZXJTaGVsbCBMb2NhbCBDZXJ0aWZp
 # Y2F0ZTAeFw0yMDAxMDYyMzAwMDBaFw0yNTEyMzAyMzAwMDBaMC4xLDAqBgNVBAMM
 # I0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmljYXRlMIICIjANBgkqhkiG
@@ -305,17 +305,17 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 # ATBCMC4xLDAqBgNVBAMMI0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmlj
 # YXRlAhBbrdcnzpVesE6t/rgdgp1WMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEM
 # MQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
-# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBQgklTLGRVjKj0h
-# VJBAcLGku7fmTDANBgkqhkiG9w0BAQEFAASCAgCv/JBXiv5eCe/LCnodtv1X98y5
-# oUpnw2wXdQ7vEQRy10bP4F5+6Ow3XSwN6aG9Z2gqmEUbZQwlwn08io7Sc1jIhvpU
-# y5zQRQjf89O9kpmoem9hbpwfqYwK4RLpCuewgtUH0GL65ZgfkJXL12kzSNAEgBbI
-# +TQqgjBbD2Ojooz2hWkKGmIXFyBTct/xWwSNpQJLl3uPBCxYBmky26mPBGOYq4CL
-# 8nHfonvje3AnYYZLEbjJVywr9U5w7gPrJ9EimChjKiCwNL3BW1mlR1mrOcmUjz0q
-# WJ7esNtC65nrV8C+jZdjDPz0/x3vD767kKD42aMdbu8yr/RcvucUu9kg04k30530
-# +uiPsLrn4fldSEc/iviEJeXHb4T5WFfd4Ilj0TB8c3ufrZm2sfiM1Rzv1Vg/V1s5
-# l4o3mhJb1n9KiJ+5J89+HMrvLCqZl9AiSVW8MdVTksntsDXCcYkDI6kLGveyavua
-# UhCc3d4+F+Eg9XhUdfkZ69RED02G7THN2OWsg6jxvVD9hHylCtfl0tJnG96tzx6j
-# rfd0DXfmcrxkRycmukgRghBLRijQN50HJ0c0mKKEZ8rTyc7v9QQlmgBaWrjiP1wO
-# IaIS0z+go79rE3DTCxEEgK4ggQy1beJ32GKdVN+SakOOZ+m3UM8/WwAXXtOA4zFb
-# 5Nd5STP2tJnxiYHP4w==
+# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBQ3/60AY3G46KjZ
+# vvJpes31yEkgODANBgkqhkiG9w0BAQEFAASCAgATwiP4f5ep9WgpzH+rlfCmgZrQ
+# AAXO4CFu8RUqr+SK/UXlSOf3djynr4TkozOZ51TaJFJguOC1WzrdNjCvmO9o1nmi
+# uBTmXOIimbCUkpXhZoK6/hffGSAcH3Pqobb54DAtzQHtsnw2OhkYWqrGvab9vcay
+# kLi+TIqFyH4Zsmf2Q3uVNQqC4ZFUBDRDfuvVTeAkvqDszeB94oWThTC3w89x7gJh
+# QkqXR7iKkKT/VGRSsiGtuSzE1wMEgmKq4fEZ1zAw50dOLSrIwj3vJ/G6hCtkotwm
+# Rl8kPrTzBPB2B3/CQa+iO4QP/+dlf/kThmQw9YCoVSztvK1Ag4itHosQKQfZUS0S
+# LT5ITNzSiEi5ZJSRlVKSF8nJ15PVqKeGBj6nlNUxAHRaMKSkLIJv5vrUlcHiLUkx
+# pneqz2XwL5fsAWf2G6zV5+uBX7ik+zb5E0Mt2e7IrL1aLodnowLxn/LDJ0NBlEhf
+# RiDsHmw6BxuhEERocbi1BhkCJ23sflIkIt3OkB3fWupXbMTkJIA13xshkPzlFhJP
+# 9bmLq/7KI9bDrAHUIjWlCbN8HsHNlB4alDSLTWd45+/aG6QsabbNUEhCCWJhXEJ3
+# initOSFHzAltWCXQkALCVQ5UbyaX5rF1gnpf8H/UoRvqwZEKKSEcCB4q7YVSrkkL
+# KN8QJLIv0DDaxHfNAA==
 # SIG # End signature block
