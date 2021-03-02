@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Option to disable automatic inclusion of the root folder corresponding to chosen project type.
+- Export of private functions for a module if ExportPrivate variable is et to true at module import.
 
 ### Changed
 

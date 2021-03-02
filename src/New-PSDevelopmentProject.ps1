@@ -8,9 +8,9 @@
 
 .COMPANYNAME 
 
-.COPYRIGHT Copyright 2018-2020 AdZero
+.COPYRIGHT Copyright 2018-2021 AdZero
 
-.TAGS 
+.TAGS PowerShell GIT
 
 .LICENSEURI 
 
@@ -41,7 +41,7 @@ Param(
 	[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New script description')]
 	[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New module description')]
 	[string]$Description,
-	[Parameter(Position=3, HelpMessage='The root path where to create new project directory')]
+	[Parameter(HelpMessage='The root path where to create new project directory')]
 	[ValidateScript({ 
 	
 	    if($_ -is [System.IO.FileSystemInfo])
@@ -95,7 +95,12 @@ Foreach($import in @($Public + $Private))
 	}
 }
 
-Export-ModuleMember -Function $Public.Basename'
+Export-ModuleMember -Function $Public.Basename
+
+if($ExportPrivate)
+{
+	Export-ModuleMember -Function $Private.Basename
+}'
 
 $Script:PS1XML_DEFAULT_CONTENT = '<?xml version="1.0" encoding="utf-8" ?>
 <Types>
@@ -376,8 +381,8 @@ New-PSDevelopmentProject @PsBoundParameters
 # SIG # Begin signature block
 # MIILqgYJKoZIhvcNAQcCoIILmzCCC5cCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUNiw+CnPgUAwT6Pp8osF+XGLR
-# a92gggggMIIIHDCCBgSgAwIBAgITLQAB8DuytSqV58vDWwABAAHwOzANBgkqhkiG
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUqJ2tB29avcTnTIkZSaAmZPNB
+# BkOgggggMIIIHDCCBgSgAwIBAgITLQAB8DuytSqV58vDWwABAAHwOzANBgkqhkiG
 # 9w0BAQ0FADA8MRIwEAYKCZImiZPyLGQBGRYCZnIxFDASBgoJkiaJk/IsZAEZFgRj
 # ZzY3MRAwDgYDVQQDEwdDRzY3IENBMB4XDTE0MDcyNDA3NDQxN1oXDTI0MDcyMTA3
 # NDQxN1owXDESMBAGCgmSJomT8ixkARkWAmZyMRQwEgYKCZImiZPyLGQBGRYEY2c2
@@ -424,17 +429,17 @@ New-PSDevelopmentProject @PsBoundParameters
 # 8ixkARkWAmZyMRQwEgYKCZImiZPyLGQBGRYEY2c2NzEQMA4GA1UEAxMHQ0c2NyBD
 # QQITLQAB8DuytSqV58vDWwABAAHwOzAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIB
 # DDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEE
-# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUGStIQUGl77Mm
-# VIE+NvRWbpLXO/QwDQYJKoZIhvcNAQEBBQAEggIAqaoVJ1AxhsvQfYOnQ9MibU88
-# BXDXD1Sy0ID6qOgkTAnKqJPZ+BazgdahC1zkcRRAzjC8tXl9A5EIqUsS7FM/v6hd
-# 9e4m/argfNK9x+LmKNc3YJZZVNXVuGgAvkRkBXIpFaekwJ4GB9zN3PeuQ3MpmoU3
-# WDpR9owcGSVLAlsVjkqSLXQ+/O/sGOL8NdwBfj0trbOa2O+13U4ru83zhclQH0Y7
-# JCl7gInc9VbgxK/k6Ru8UjFoHTWYDVNlGugqpMXEmA0ZUMKQRkDi+9L66F0nBfU5
-# X+of7t7wAuoJlCm0T3gLV/bYy+Kxa9z9LEiQ0zWYeQ5K/rHuNsePl5Iu1hE3vqQ+
-# 1yZzTMYaolVnWHtEPjj3kQJfKCmmQYkonnTBscgbSMmzt4lRUpo8ldTIQ6AHHo9a
-# Irj8Sw21pYr2sSlwJG5n1F2e7NkfThC1hD0CepS62qiKHRbkQL63Pg9Xee6E4JgZ
-# 1ANZezqOWlgrebx46+e43yC/cKAOJ2dfkOC7hsdqwbKWWLBjmsygGdSHbivvY+Es
-# NEv8NBy/azjd2BbGIVxZGa30kUM1Ah6yvWT8YQLvlv01pB1TkicOSlDJVUEOCHQ4
-# YBPCVUmpgVisKEHWQ1vYVOu/HdXgM128TKSavW6C+WT/h1QVnQXdMRjkx8DZjrIp
-# aHQiE5IQ7pkV3u89L9E=
+# AYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUKgYG10AcIQED
+# iPY90Fko7o7kWAEwDQYJKoZIhvcNAQEBBQAEggIAMBaurWPYx4RWMj6OGbmafTBJ
+# 9aKSjBLxL92re29fSbtYIxM/+08KxD030DIfdOcIYpXX+BnfJ3lThweJTWV0g1KZ
+# 7rENEqbTkqaiHGJuOjHoFb1GaTlmhnp3APHS1Ytmx50GT5mZvqnluT8d5wSuBHzp
+# Mc6ddvpYMkQ1BT8B0kLh3onMse14/KfzKVeR4k6BHbrDVPOZHx07ktglCRhFMPrP
+# r7H4urC4vxUFYEXCiXh6xVHvSMamc30HqA2Yrd7mEnWJGUo+qhGM4MaPl9dUnVB5
+# hsl+RtZGnxXPfYv6V5UIVIRp/5e4XFOhFqt1eJP7LSR4Rqe27pMFSwBNiebs3sdm
+# IPW8m8HN3OMoHP02TtJdhU7dPoJUqrFzsrJhmUqrRPEBnFqeymxLRaWPI0pGbfkv
+# X4qLcuh+oCtaMkgqkFRDTN4BjxMpmAtois61ZXtAxtL9BJX02U68ZCZifw/XNE/p
+# i6k6twVCi5R7gzDGZpf9nUoE0960PCy3JSHxNN6cTwP7inCtmZKN2+fLqyvNS72b
+# DIMN+DR+DCfsksVmqZhsZbCV7Rvv+2mluUVNOh7nH41i1xOri2HrfqAHfnCgGMMB
+# G5fKkho00HiJXX6iZEbLqXeA9DK4YCc54UGp1HUJ1M91I26zOBNdJO6fV/DKp6qJ
+# MzGu2rOtuYeVdR8Vk4U=
 # SIG # End signature block
