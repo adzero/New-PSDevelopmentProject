@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.1.0
+.VERSION 1.2.0
 
 .GUID 32d9b358-2002-4dbb-9393-d068333a60e6
 
@@ -344,176 +344,127 @@ function New-ProjectItem
 # Script main function #
 ########################
 
-function New-PSDevelopmentProject
+#Creating project root path
+if(-not $DisableProjectCategoryFolder.IsPresent)
 {
-	[CmdletBinding(DefaultParameterSetName="Script")]
-	Param(
-		[Parameter(ParameterSetName="Script", Position=0, Mandatory=$true, HelpMessage='New script name')]
-		[Parameter(ParameterSetName="Module", Position=0, Mandatory=$true, HelpMessage='New module name')]
-		[string]$Name,
-		[Parameter(ParameterSetName="Script", Position=1, Mandatory=$true, HelpMessage='New script author')]
-		[Parameter(ParameterSetName="Module", Position=1, Mandatory=$true, HelpMessage='New module author')]
-		[string]$Author,
-		[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New script description')]
-		[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New module description')]
-		[string]$Description,
-		[Parameter(Position=3, HelpMessage='The root path where to create new project directory')]
-		[ValidateScript({ 
-		
-			if($_ -is [System.IO.FileSystemInfo])
-			{
-				$value = $_.FullName
-			}
-			elseif([System.IO.Path]::IsPathRooted($_))
-			{
-				$value = [string]$_
-			}
-			else
-			{
-				$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
-			}
+	$path = (New-Item -Path $RootPath -Name (@{$true="Modules";$false="Scripts"}[$PSCmdlet.ParameterSetName -eq "Module"]) -ItemType Directory -Force).FullName
+}
+else
+{
+	$path = $RootPath
+}
 
-			if(!(Test-Path -LiteralPath $value -PathType Container))
-			{
-				throw "Provided path is not a valid directory path: '$value'" 
-			}
-			
-			return $true
-		})]
-		$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
-		[Parameter(ParameterSetName="Script", Mandatory=$true, HelpMessage='Use this option to create a project structure for a script')]
-		[switch]$ScriptProject,
-		[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module')]
-		[switch]$ModuleProject,
-		[Parameter(HelpMessage='Use this option to create a new git repository for the project')]
-		[switch]$GitRepository,
-		[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path')]
-		[switch]$DisableProjectCategoryFolder)
+#Creating directory structure
+#Root directory
+if(New-ProjectItem -Directory -Path $path -Name $Name)
+{
+	$path = Join-Path -Path $path -ChildPath $Name
 
-	#Creating project root path
-	if(-not $DisableProjectCategoryFolder.IsPresent)
+	#Git repository if enabled
+	if($GitRepository)
 	{
-		$path = (New-Item -Path $RootPath -Name (@{$true="Modules";$false="Scripts"}[$PSCmdlet.ParameterSetName -eq "Module"]) -ItemType Directory -Force).FullName
-	}
-	else
-	{
-		$path = $RootPath
-	}
-
-	#Creating directory structure
-	#Root directory
-	if(New-ProjectItem -Directory -Path $path -Name $Name)
-	{
-		$path = Join-Path -Path $path -ChildPath $Name
-
-		#Git repository if enabled
-		if($GitRepository)
+		if(Get-Command "git" -ErrorAction SilentlyContinue)
 		{
-			if(Get-Command "git" -ErrorAction SilentlyContinue)
-			{
-				#Empty gitignore file
-				New-ProjectItem -File -Path $path -Name ".gitignore"
-				
-				#Create repository
-				$env:GIT_DIR = Join-Path -Path $path -ChildPath ".git"
-				$env:GIT_WORK_TREE = $path
-				&git init 2>$null
-
-				#First commit and dev branch creation
-				$temp = Get-Location
-				$null = Set-Location $path -PassThru 2>$null
-				&git add . 2>$null
-				&git commit -m "Repository creation" 2>$null
-				&git branch "develop" 2>$null
-				&git checkout "develop" 2>$null
-				$null = Set-Location $temp -PassThru | Out-Null
-			}
-			else
-			{
-				Write-Warning -Message "Git executable not found. Check its existence and add it to your PATH environment variable."
-			}
-		}
-
-		#README, License,...
-		New-ProjectItem -File -Path $path -Name "README.md" -Content $Script:README
-		New-ProjectItem -File -Path $path -Name "LICENSE" -Content $Script:LICENSE
-
-		#Script/Module code directory tree
-		$codeFolder = New-ProjectItem -Directory -Path $path -Name "src"
-
-		##Types definition file
-		New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:PS1XML_DEFAULT_CONTENT
-
-		##Bin and libraries folders
-		New-ProjectItem -Directory -Path $codeFolder -Name "lib"
-		New-ProjectItem -Directory -Path $codeFolder -Name "bin"
-
-		##Script/Module files
-		if($PSCmdlet.ParameterSetName -eq "Module")
-		{
-			#Root module file
-			New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $Script:ROOT_MODULE_CONTENT
-			#Getting current PowerShell Version
-			$version = $PSVersionTable.PSVersion | select -ExpandProperty Major
-
-			New-ModuleManifest -Path (Join-Path -Path $codeFolder -ChildPath "$Name.psd1") `
-							   -RootModule "$Name.psm1" `
-							   -Description $Description `
-							   -PowerShellVersion $PSVersionTable.PSVersion `
-							   -Author $Author `
-							   -Copyright "Copyright $((Get-Date).Year) $Author" `
-							   -FormatsToProcess "$Name.Format.ps1xml"
+			#Empty gitignore file
+			New-ProjectItem -File -Path $path -Name ".gitignore"
 			
-			#Directories for module's functions
-			New-ProjectItem -Directory -Path $codeFolder -Name "Private"
-			New-ProjectItem -Directory -Path $codeFolder -Name "Public"
-			
-			##Help file(s)
-			$childDirectory = New-ProjectItem -Directory -Path $codeFolder -Name "en-US"
-			New-ProjectItem -File -Path $childDirectory -Name "about_$Name.help.txt"
+			#Create repository
+			$env:GIT_DIR = Join-Path -Path $path -ChildPath ".git"
+			$env:GIT_WORK_TREE = $path
+			&git init 2>$null
+
+			#First commit and dev branch creation
+			$temp = Get-Location
+			$null = Set-Location $path -PassThru 2>$null
+			&git add . 2>$null
+			&git commit -m "Repository creation" 2>$null
+			&git branch "develop" 2>$null
+			&git checkout "develop" 2>$null
+			$null = Set-Location $temp -PassThru | Out-Null
 		}
 		else
 		{
-			New-ScriptFileInfo -Path (Join-Path -Path $codeFolder -ChildPath "$Name.ps1") -Version "1.0.0" -Author $Author -Description $Description -Copyright "Copyright $((Get-Date).Year) $Author"
-		}
-
-		#Tests directory
-		$childDirectory = New-ProjectItem -Directory -Path $path -Name "tests"
-		New-ScriptFileInfo -Path (Join-Path -Path $childDirectory -ChildPath "$Name.Tests.ps1") -Version "1.0.0" -Author $Author -Description "Tests for $Name project"
-
-		#Add created directories and files to Git repository if enabled
-		if($GitRepository)
-		{
-			if(Get-Command "git" -ErrorAction SilentlyContinue)
-			{
-				$temp = Get-Location
-				$null = Set-Location $path -PassThru | Out-Null
-				&git add . 2>$null
-				$null = Set-Location $temp -PassThru | Out-Null
-			}
-			else
-			{
-				Write-Warning -Message "Git executable not found. Check its existence and add it to your PATH environment variable."
-			}
+			Write-Warning -Message "Git executable not found. Check its existence and add it to your PATH environment variable."
 		}
 	}
-	elseif(Test-Path -Path $path -PathType Container)
+
+	#README, License,...
+	New-ProjectItem -File -Path $path -Name "README.md" -Content $Script:README
+	New-ProjectItem -File -Path $path -Name "LICENSE" -Content $Script:LICENSE
+
+	#Script/Module code directory tree
+	$codeFolder = New-ProjectItem -Directory -Path $path -Name "src"
+
+	##Types definition file
+	New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:PS1XML_DEFAULT_CONTENT
+
+	##Bin and libraries folders
+	New-ProjectItem -Directory -Path $codeFolder -Name "lib"
+	New-ProjectItem -Directory -Path $codeFolder -Name "bin"
+
+	##Script/Module files
+	if($PSCmdlet.ParameterSetName -eq "Module")
 	{
-		Write-Host "Directory '$path' already exists. Rename or remove it and retry." -ForegroundColor Red
+		#Root module file
+		New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $Script:ROOT_MODULE_CONTENT
+		#Getting current PowerShell Version
+		$version = $PSVersionTable.PSVersion | select -ExpandProperty Major
+
+		New-ModuleManifest -Path (Join-Path -Path $codeFolder -ChildPath "$Name.psd1") `
+							-RootModule "$Name.psm1" `
+							-Description $Description `
+							-PowerShellVersion $PSVersionTable.PSVersion `
+							-Author $Author `
+							-Copyright "Copyright $((Get-Date).Year) $Author" `
+							-FormatsToProcess "$Name.Format.ps1xml"
+		
+		#Directories for module's functions
+		New-ProjectItem -Directory -Path $codeFolder -Name "Private"
+		New-ProjectItem -Directory -Path $codeFolder -Name "Public"
+		
+		##Help file(s)
+		$childDirectory = New-ProjectItem -Directory -Path $codeFolder -Name "en-US"
+		New-ProjectItem -File -Path $childDirectory -Name "about_$Name.help.txt"
 	}
 	else
 	{
-		Write-Host "Can't create directory '$path'." -ForegroundColor Red
+		New-ScriptFileInfo -Path (Join-Path -Path $codeFolder -ChildPath "$Name.ps1") -Version "1.0.0" -Author $Author -Description $Description -Copyright "Copyright $((Get-Date).Year) $Author"
+	}
+
+	#Tests directory
+	$childDirectory = New-ProjectItem -Directory -Path $path -Name "tests"
+	New-ScriptFileInfo -Path (Join-Path -Path $childDirectory -ChildPath "$Name.Tests.ps1") -Version "1.0.0" -Author $Author -Description "Tests for $Name project"
+
+	#Add created directories and files to Git repository if enabled
+	if($GitRepository)
+	{
+		if(Get-Command "git" -ErrorAction SilentlyContinue)
+		{
+			$temp = Get-Location
+			$null = Set-Location $path -PassThru | Out-Null
+			&git add . 2>$null
+			$null = Set-Location $temp -PassThru | Out-Null
+		}
+		else
+		{
+			Write-Warning -Message "Git executable not found. Check its existence and add it to your PATH environment variable."
+		}
 	}
 }
-
-New-PSDevelopmentProject @PsBoundParameters
+elseif(Test-Path -Path $path -PathType Container)
+{
+	Write-Host "Directory '$path' already exists. Rename or remove it and retry." -ForegroundColor Red
+}
+else
+{
+	Write-Host "Can't create directory '$path'." -ForegroundColor Red
+}
 
 # SIG # Begin signature block
 # MIIIqQYJKoZIhvcNAQcCoIIImjCCCJYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUs5KX1MrhcCD+HGKF30nfXPei
-# 0+agggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUSqdIJUZ/ewAMYtX7A//GPpKu
+# NrWgggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
 # AQ0FADAuMSwwKgYDVQQDDCNBZFplcm8gUG93ZXJTaGVsbCBMb2NhbCBDZXJ0aWZp
 # Y2F0ZTAeFw0yMDAxMDYyMzAwMDBaFw0yNTEyMzAyMzAwMDBaMC4xLDAqBgNVBAMM
 # I0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmljYXRlMIICIjANBgkqhkiG
@@ -544,17 +495,17 @@ New-PSDevelopmentProject @PsBoundParameters
 # ATBCMC4xLDAqBgNVBAMMI0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmlj
 # YXRlAhBbrdcnzpVesE6t/rgdgp1WMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEM
 # MQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
-# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBRCV8aV+1NopO5Z
-# Rxh6Vs0Yl5B6MTANBgkqhkiG9w0BAQEFAASCAgAjyKYFSJVCc8zQD/LHARGGPy7O
-# zkpxl8eqsgeKmWSXBJ4qbAxzJY6c5IxBmUIxXPBF3qg2JE+22j7rNFgl/W4Nhe25
-# UQUOD5wJR1lCrzIVEzDTFSfPENTdELkF2RuIH6CgSA0TrCtOuw32B8/8My+AoYKN
-# O7rPhekr7/GmAz4b9ui+kBr8U12QFo12PqvRI9u4VwZFD5/9j3oyO4Rkgz381HjZ
-# 9NC43h4L/RFRr/AHvyADEWuoTB9dIJQeFy1o+OyFVDOjl/BwazbSHTBqohGfQJE5
-# pYZ/GcJB6C+biPxgbWK3KRiU/SABl9S7Rdu+IG4QOaARJTsNnImzE0w64Ha9JMOx
-# vO/zoT7xVvsyQ1VDQtmHNu2sfnQa5jRO6tGNDkFc/Wo8MsW9FWaSCoEds7OASKsX
-# EG2U+3iaPQsZWLzXleOpTQrftQxEz11m1SbvqYTMb7/fUv+qplGzJz0ULR/A/sN4
-# WWz4t2zpFyD0pJyoyfKXFzXma91BgmVtMP5b71DF4mcOjk/olkftjKTxbhom6jOK
-# Z+frc7sCcLiEySYMq3yaatEANyN7QlO7M72ud0sqpJ+p3wH2VewUpeiaprSV2uXK
-# 9adzpka/V94Xm637NfklljZcQEwhvDKh1CYSdgeTSORgKgHxxnwPeT3aBhELV+pE
-# l4OLowHtb/rQbwR9uw==
+# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBRDCzGpp7HN1rwO
+# BID+D5DLjgQb4jANBgkqhkiG9w0BAQEFAASCAgA4e/u05jkz9X/TBxQgaRRZb4BF
+# 5OyUr5v9GLqcLZxuyDRoaoRF5prjgHGy0CChtDCZDIpkahnmRT+jbxFDagy/Jht3
+# VkY2VC5jappVPLCx/cauJJOOPYjaD64TgoFXPy5j8ix+YHxLe1bF04z0UD9ZHUXr
+# mdsNZpQXbT1UTKDi4tM1ue2CYDVf/tG/KPtAhmz+uGyn9iAkGWgMWobRr6jnDJlD
+# SUqXZi+yRuBGyw7Vxkg4d8DfFy+YMS16g0XqULh4BYQd6+zVSCD/VUAslD2jYpIo
+# TqaThbArCi1vZAgVb8367l7Gayz5ioxoDcG3LsRGUl3L96ccQZVFdW5ZA1lySi+H
+# mD3XLAsWMzRpTQFZL7UkuV7reWSH9Xh30bGbuPwVbD1DPyZpQ1u44EMt243C3o5p
+# LFRo249Xga8pWzfAN+lw2A34KUgYjrNRFNA7Ns3wmlwRxH3Lp+pkI23UR8At6j3a
+# OgxvmZWh/p/ksucsb8ZM0pH05n4Yz2notA3mxaErQQvGyRXnOhjKWMMxxJBR/o7C
+# 1VdSJtmcFdjatf1ReHAliSgbRRtcMDagQ6edCPUQSdxpwM7jGWSQNySQSAEjMWcz
+# +0Wt9TmCTN1mOjNaOUV0XrCHInqmz1J8y0b+FZtJe7iNZosIyBETlky8waEDk5ij
+# /e55sPrANQSjQkObvA==
 # SIG # End signature block
