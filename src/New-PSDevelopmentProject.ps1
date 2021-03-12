@@ -417,7 +417,7 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 		#Root module file
 		New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $Script:ROOT_MODULE_CONTENT
 		#Getting current PowerShell Version
-		$version = $PSVersionTable.PSVersion | select -ExpandProperty Major
+		$version = $PSVersionTable.PSVersion | Select-Object -ExpandProperty Major
 
 		New-ModuleManifest -Path (Join-Path -Path $codeFolder -ChildPath "$Name.psd1") `
 							-RootModule "$Name.psm1" `
