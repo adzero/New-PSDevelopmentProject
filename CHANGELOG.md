@@ -9,12 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed default format.ps1xml file which was filed with empty type.ps1xml content.
- 
+
 ### Changed
 
 - Changed script structure, deleting function to avoid declaring parameters twice.
 
 ### Added
+
+- Added default type.ps1xml file to project.
 
 ## [1.1.0] - 2021-03-02
 

@@ -233,6 +233,10 @@ if($ExportPrivate)
 	Export-ModuleMember -Function $Private.Basename
 }'
 
+$Script:TYPE_PS1XML_DEFAULT_CONTENT = '<?xml version="1.0" encoding="utf-8"?>
+<Types>
+</Types>'
+
 $Script:FORMAT_PS1XML_DEFAULT_CONTENT = '<?xml version="1.0" encoding="utf-8"?>
 <Configuration>
   <ViewDefinitions>
@@ -397,6 +401,9 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 	#Script/Module code directory tree
 	$codeFolder = New-ProjectItem -Directory -Path $path -Name "src"
 
+	##Type definition file
+	New-ProjectItem -File -Path $codeFolder -Name "$Name.Type.ps1xml" -Content $Script:TYPE_PS1XML_DEFAULT_CONTENT
+
 	##Format definition file
 	New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:FORMAT_PS1XML_DEFAULT_CONTENT
 
@@ -418,6 +425,7 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 							-PowerShellVersion $PSVersionTable.PSVersion `
 							-Author $Author `
 							-Copyright "Copyright $((Get-Date).Year) $Author" `
+							-TypesToProcess "$Name.Type.ps1xml" `
 							-FormatsToProcess "$Name.Format.ps1xml"
 		
 		#Directories for module's functions
