@@ -233,9 +233,11 @@ if($ExportPrivate)
 	Export-ModuleMember -Function $Private.Basename
 }'
 
-$Script:PS1XML_DEFAULT_CONTENT = '<?xml version="1.0" encoding="utf-8" ?>
-<Types>
-</Types>'
+$Script:FORMAT_PS1XML_DEFAULT_CONTENT = '<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <ViewDefinitions>
+  </ViewDefinitions>
+</Configuration>'
 
 $Script:README = "# $Name
 
@@ -395,8 +397,8 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 	#Script/Module code directory tree
 	$codeFolder = New-ProjectItem -Directory -Path $path -Name "src"
 
-	##Types definition file
-	New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:PS1XML_DEFAULT_CONTENT
+	##Format definition file
+	New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:FORMAT_PS1XML_DEFAULT_CONTENT
 
 	##Bin and libraries folders
 	New-ProjectItem -Directory -Path $codeFolder -Name "lib"

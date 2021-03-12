@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed default format.ps1xml file which was filed with empty type.ps1xml content.
+ 
 ### Changed
 
 - Changed script structure, deleting function to avoid declaring parameters twice.
@@ -19,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Option to disable automatic inclusion of the root folder corresponding to chosen project type.
-- Export of private functions for a module if ExportPrivate variable is et to true at module import.
+- Export of private functions for a module if ExportPrivate variable is set to true at module import.
 - Added script comment based help.
 
 ### Changed
