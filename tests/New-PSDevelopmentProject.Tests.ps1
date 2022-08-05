@@ -8,7 +8,7 @@
 
 .COMPANYNAME AdZero
 
-.COPYRIGHT Copyright 2018-2021 AdZero
+.COPYRIGHT Copyright 2018-2022 AdZero
 
 .TAGS New-PSDevelopmentProject Test Pester
 
@@ -183,6 +183,8 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.psd1") -PathType Leaf | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\TestScriptProject.Type.ps1xml") -PathType Leaf | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.Format.ps1xml") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Enums") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Classes") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Public") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Private") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\lib") -PathType Container | Should -Be $true
@@ -239,6 +241,8 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.psd1") -PathType Leaf | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\TestScriptProject.Type.ps1xml") -PathType Leaf | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.Format.ps1xml") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Enums") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Classes") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Public") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Private") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\lib") -PathType Container | Should -Be $true

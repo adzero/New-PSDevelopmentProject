@@ -8,7 +8,7 @@
 
 .COMPANYNAME AdZero
 
-.COPYRIGHT Copyright 2018-2021 AdZero
+.COPYRIGHT Copyright 2018-2022 AdZero
 
 .TAGS PowerShell GIT
 
@@ -80,6 +80,8 @@ Mode                 LastWriteTime         Length Name
 d-----        02/03/2021     19:23                lib
 d-----        02/03/2021     19:23                bin
 -a----        02/03/2021     19:23            574 NewModuleProject.psm1
+d-----        02/03/2021     19:23                Enums
+d-----        02/03/2021     19:23                Classes
 d-----        02/03/2021     19:23                Private
 d-----        02/03/2021     19:23                Public
 
@@ -118,6 +120,8 @@ Mode                 LastWriteTime         Length Name
 d-----        02/03/2021     19:28                lib
 d-----        02/03/2021     19:28                bin
 -a----        02/03/2021     19:28            574 NewModuleGitProject.psm1
+d-----        02/03/2021     19:23                Enums
+d-----        02/03/2021     19:23                Classes
 d-----        02/03/2021     19:28                Private
 d-----        02/03/2021     19:28                Public
 
@@ -210,11 +214,13 @@ $RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",
 ##################################
 
 $Script:ROOT_MODULE_CONTENT = '#Get public and private function definition files.
+$Enums  = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue )
+$Classes  = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction SilentlyContinue )
 $Public  = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )
 $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
 
 #Dot source the files
-Foreach($import in @($Public + $Private))
+Foreach($import in @($Enums + $Classes + $Public + $Private))
 {
 	Try
 	{
@@ -428,7 +434,9 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 							-TypesToProcess "$Name.Type.ps1xml" `
 							-FormatsToProcess "$Name.Format.ps1xml"
 		
-		#Directories for module's functions
+		#Directories for module's functions, classes and enumerations.
+		New-ProjectItem -Directory -Path $codeFolder -Name "Enums"
+		New-ProjectItem -Directory -Path $codeFolder -Name "Classes"
 		New-ProjectItem -Directory -Path $codeFolder -Name "Private"
 		New-ProjectItem -Directory -Path $codeFolder -Name "Public"
 		
