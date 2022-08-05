@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.1.0
+.VERSION 1.2.0
 
 .GUID 00fe9040-1bc7-4862-9e45-e0a59c005d65
 
@@ -8,7 +8,7 @@
 
 .COMPANYNAME AdZero
 
-.COPYRIGHT Copyright 2018-2021 AdZero
+.COPYRIGHT Copyright 2018-2022 AdZero
 
 .TAGS New-PSDevelopmentProject Test Pester
 
@@ -183,6 +183,8 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.psd1") -PathType Leaf | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\TestScriptProject.Type.ps1xml") -PathType Leaf | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.Format.ps1xml") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Enums") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Classes") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Public") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Private") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\lib") -PathType Container | Should -Be $true
@@ -239,6 +241,8 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.psd1") -PathType Leaf | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Scripts\TestScriptProject\src\TestScriptProject.Type.ps1xml") -PathType Leaf | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\TestModuleProject.Format.ps1xml") -PathType Leaf | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Enums") -PathType Container | Should -Be $true
+			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Classes") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Public") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\Private") -PathType Container | Should -Be $true
 			Test-Path -Path (Join-Path -Path $testPath -ChildPath "Modules\TestModuleProject\src\lib") -PathType Container | Should -Be $true
@@ -275,51 +279,68 @@ Describe "New-PSDevelopmentProject | Test module project creation" {
 }
 
 # SIG # Begin signature block
-# MIIIqQYJKoZIhvcNAQcCoIIImjCCCJYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
-# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUSyedCtgPu16a/grwg34ezcCM
-# rpigggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
-# AQ0FADAuMSwwKgYDVQQDDCNBZFplcm8gUG93ZXJTaGVsbCBMb2NhbCBDZXJ0aWZp
-# Y2F0ZTAeFw0yMDAxMDYyMzAwMDBaFw0yNTEyMzAyMzAwMDBaMC4xLDAqBgNVBAMM
-# I0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmljYXRlMIICIjANBgkqhkiG
-# 9w0BAQEFAAOCAg8AMIICCgKCAgEAsKSGndXWnvczniCJM5x2ErFwKWPufBqG2hQT
-# NU/hxjQjOEfv7EewowFCf8hm0OQjNbn4Bv8LtwQCsN2r+iM+CScJ/mipyEpzvG9T
-# q6Hf4jybgBSYH8G5mWUym3LsrlFUt1A5FvfuJbPNNWkoGY6sgG7NTqEICLS46/Zc
-# n9GWNiYoIcMXdouMwWHsYLWnhKSfyE077brSmd4mJFym4OUy5tNiBjyiaEawZ6fE
-# vINXJghk2PfUUYjqBs/10AH75N8AjaBieBiQaZj98LAHJYis618Os/QxR4moRjGG
-# oMikBJMRWmC4ijrONFZsbchyxd/6gXLnUAcB1/F4g1VAXJZ3gPsRja1ItsxNuAcA
-# NEXRt34RKK+ayDul4mHvYy7X4+J88qB//p7ENrA+d1l2GM9GJhzemmgZUVv9Sx39
-# r45VF7zRRluCIRsmOREAKmiqRU6y6xdSp/Fmf0cWt2bBgvqJ5+j4cRHv4KI0veLP
-# SBWRFplbr+emxrhbMHI9m+/RHiT2BI9jBX9awXnaxcYH8IQN87CA/L4y/AhRLsuU
-# +zwaZ5YCyyi3VeAUfMCnJq/1Gfa+gUO2xfWcavVjcSgMatrktSNyCLURSD9OS/89
-# 4kBS2EO5lzvOUKDrE3LfDHORsbhpk7MbP/+TOnSL6heBplT6RE1Voql1k0IoTqyW
-# TtD1YA0CAwEAAaNGMEQwDgYDVR0PAQH/BAQDAgeAMBMGA1UdJQQMMAoGCCsGAQUF
-# BwMDMB0GA1UdDgQWBBRkZ706baqI0oKHJiJwnYJW+FT2rDANBgkqhkiG9w0BAQ0F
-# AAOCAgEAGkzJAIBdoCtUDV9Hz4bqllZ5X4SEEFk3WvlwqLz7S5FyiRFGzaBRfIoJ
-# XTwzczUXxr8UOhN90zBvkPoF+9pJccIEoXs3VuBK/jiv+WQJZtD2qpvmz5ZJMU3G
-# f/mwlDAc/Vof3GJmCIJ/5A4gVRu4j07tH/XWOyfYJEMIBPFOUsBnJCYZzlbKGXoU
-# hDQHLwsDB5Z/+4TwLZPSG3fkUewuTyaqLPotarh6EEWcf6Bxrtwr2SEIwpbshRb5
-# 1T8e2JRDAPFMM49kVqv5IiHq3Zrws4LFDZsXCuYaDABw4B7nDx1GP8En7+hGlVvn
-# Jhr1kr11yrwo4yr9RPvDLIQRNFrvkwwEcwBrGTXuydCNkd+P+knCDLR7T6B38i6o
-# WSiqleN0GgUYddT5s7kSPYjPbQD5ChheHYSTAiJBNvip+UBkTYsj9sxYz7sajmP0
-# vWhuXNqMgOj49KYJ3Q348Z93cMSBUZ4DYQoHToHtf9fXzHQGZtAOasDYayhUh08b
-# 1pr/zikZKfzH4Afgj5ffHLifxmWTUsocsIrXmkgScKDizW+vONhiljmS8FxacZmm
-# Xm+q+cDJ+2CrzlQSyPWN5f5r1DzyxC+7SA9uRfQi1meDSo0W9jrsKx+1IBE6D1DY
-# l/km38aF2oeAPBhn/43itNPYg2yP+nvWt/Fodn/t7BBk8upTPFYxggLjMIIC3wIB
-# ATBCMC4xLDAqBgNVBAMMI0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmlj
-# YXRlAhBbrdcnzpVesE6t/rgdgp1WMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEM
-# MQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
-# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBQ3/60AY3G46KjZ
-# vvJpes31yEkgODANBgkqhkiG9w0BAQEFAASCAgATwiP4f5ep9WgpzH+rlfCmgZrQ
-# AAXO4CFu8RUqr+SK/UXlSOf3djynr4TkozOZ51TaJFJguOC1WzrdNjCvmO9o1nmi
-# uBTmXOIimbCUkpXhZoK6/hffGSAcH3Pqobb54DAtzQHtsnw2OhkYWqrGvab9vcay
-# kLi+TIqFyH4Zsmf2Q3uVNQqC4ZFUBDRDfuvVTeAkvqDszeB94oWThTC3w89x7gJh
-# QkqXR7iKkKT/VGRSsiGtuSzE1wMEgmKq4fEZ1zAw50dOLSrIwj3vJ/G6hCtkotwm
-# Rl8kPrTzBPB2B3/CQa+iO4QP/+dlf/kThmQw9YCoVSztvK1Ag4itHosQKQfZUS0S
-# LT5ITNzSiEi5ZJSRlVKSF8nJ15PVqKeGBj6nlNUxAHRaMKSkLIJv5vrUlcHiLUkx
-# pneqz2XwL5fsAWf2G6zV5+uBX7ik+zb5E0Mt2e7IrL1aLodnowLxn/LDJ0NBlEhf
-# RiDsHmw6BxuhEERocbi1BhkCJ23sflIkIt3OkB3fWupXbMTkJIA13xshkPzlFhJP
-# 9bmLq/7KI9bDrAHUIjWlCbN8HsHNlB4alDSLTWd45+/aG6QsabbNUEhCCWJhXEJ3
-# initOSFHzAltWCXQkALCVQ5UbyaX5rF1gnpf8H/UoRvqwZEKKSEcCB4q7YVSrkkL
-# KN8QJLIv0DDaxHfNAA==
+# MIILzwYJKoZIhvcNAQcCoIILwDCCC7wCAQExDzANBglghkgBZQMEAgEFADB5Bgor
+# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBpzFlxmGe8+A1/
+# +j+EiYUIbjMuBUEkMduyeIR5tUfqKaCCCCAwgggcMIIGBKADAgECAhMtAAHwO7K1
+# KpXny8NbAAEAAfA7MA0GCSqGSIb3DQEBDQUAMDwxEjAQBgoJkiaJk/IsZAEZFgJm
+# cjEUMBIGCgmSJomT8ixkARkWBGNnNjcxEDAOBgNVBAMTB0NHNjcgQ0EwHhcNMTQw
+# NzI0MDc0NDE3WhcNMjQwNzIxMDc0NDE3WjBcMRIwEAYKCZImiZPyLGQBGRYCZnIx
+# FDASBgoJkiaJk/IsZAEZFgRjZzY3MRowGAYDVQQLExFTZXJ2aWNlcyBBY2NvdW50
+# czEUMBIGA1UEAxMLU2VydmljZUNlcnQwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAw
+# ggIKAoICAQDB+enIz1Rw0UdMiOAm4iWsgHjjS6xuMQs5e5SCUUdzxRM1sDHhPgkt
+# YgEQOTJZZvSiSsUUumPvwVTZJxzFjWVKxO9Imk3m7qQZIBIlbFXt4r43yLh9K6lX
+# rYvNMYB6TFvaLmpcgO7pjJyKjbju2Bv3tEX+894LmPsqYhRb3CCB53Hb2cjEa6ra
+# vzsi1fL1F1r7BS0WuXjAEsmj/6vOOg06gSRcoD4Nb+rwfoVpoFEyL/SK3/DzExi4
+# 9qW2A+GL05Vu+INk9wk6sJPNpZJl/LESMNb2xXCLqpPSr5EYQLwwqgN4ciSUq9Tm
+# +AKLXOsOTtbcXonoVtUVSjsGk2nYj4H9TSCvXsGMUpyOGn1RXFaSLlVwmgbNd9kH
+# iy22i+Hm6jxfiEgiLRvibdIdU0JNMN+fVKzrpXLwY8r6CRAOni7MVOePeZHZX6vy
+# JMCOPQZlPx0gwLZ2Yd122hNkXWpOJ5l7GqVqstc5fo3betRzTn2OXkjblq9T1rtn
+# Tgnd7dGGUCr8o2+ANz3aDkJuonFcZ2lKHOtGB086XhLd6bsw0xKxCaxK9XPzh64J
+# 2pY0QSwNvlja4braqUf3i3yluh4SAf+zwJTh5a/46RGGRa1tdML23G6ij5jpaBmL
+# bnGk1VyoUr1gCWGHEPcBNirnDv4ZVUUsussCvgWqtvljbpA95sqcTQIDAQABo4IC
+# 9TCCAvEwPgYJKwYBBAGCNxUHBDEwLwYnKwYBBAGCNxUIgoq1H4HS7myDzZEPhNrj
+# UIWX6XuBRoHk8FeH+KUAAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMAsGA1Ud
+# DwQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYBBQUH
+# AwMwHQYDVR0OBBYEFJXVQbMlPArU3fa+7RU1C0wX4JMaMB8GA1UdIwQYMBaAFKoe
+# U82wSmTpY8Vq3GFNQPlIGLzYMIHwBgNVHR8EgegwgeUwgeKggd+ggdyGgapsZGFw
+# Oi8vL0NOPUNHNjclMjBDQSgxKSxDTj1DQSxDTj1DRFAsQ049UHVibGljJTIwS2V5
+# JTIwU2VydmljZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1jZzY3
+# LERDPWZyP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZT9vYmplY3RDbGFz
+# cz1jUkxEaXN0cmlidXRpb25Qb2ludIYtaHR0cDovL0NBLmNnNjcuZnIvQ2VydEVu
+# cm9sbC9DRzY3JTIwQ0EoMSkuY3JsMIH9BggrBgEFBQcBAQSB8DCB7TCBpAYIKwYB
+# BQUHMAKGgZdsZGFwOi8vL0NOPUNHNjclMjBDQSxDTj1BSUEsQ049UHVibGljJTIw
+# S2V5JTIwU2VydmljZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1j
+# ZzY3LERDPWZyP2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZp
+# Y2F0aW9uQXV0aG9yaXR5MEQGCCsGAQUFBzAChjhodHRwOi8vQ0EuY2c2Ny5mci9D
+# ZXJ0RW5yb2xsL0NBLmNnNjcuZnJfQ0c2NyUyMENBKDEpLmNydDAvBgNVHREEKDAm
+# oCQGCisGAQQBgjcUAgOgFgwUc2VydmljZS5jZXJ0QGNnNjcuZnIwDQYJKoZIhvcN
+# AQENBQADggIBAF/E85ds62m9EM13OER+EckaaCKufbDVTgBJJ0WCCTWMHsYIAJWi
+# xwevEhQS3+QLefQkA5UURfNLY5h+KpHtWOUSUhiSPkD82ngRiiphqJWbl9NwKm+q
+# GdjKUIBPgH3b19Halkx0RGaRbcW1JBLGD76VRCHLV8nTQD31/+PVTPuALGn411u5
+# vIfJgRCSkW/TG0Xg37zMKt7sanSUmfFr9KJfCT6Ut/7+tdcp4cPeeNlHEMHPzs1b
+# sTeSE98eJG8CkIK9vMxDAgJsOrp5hb+M+YCnRYJMeT9sMyE0+ZA5iYZ8AnOSgX+2
+# EPHLBbXqdngNvTIzJ4oJZPYYVz9JkPtCtIVHu60RsPZMd9Fllv5mbIkUTtShZjvO
+# LBWDe/dirCZYyIh+FLpl1Nmgm6PPqgisTtm1yeWv6+GFZG7TmlTqpBkGSsO002Fa
+# D++o4E/eRIit7BAaUzVT0mStzFEgfhEOwS+bCx8d7LKVklmdtsNYRGRYkiC/PZVl
+# sxkPeGOqHalVtcWMEAOw0aHM9q2H6gmXNUxrCg3I6q32fy6elAJH1/NBeMR+WQ3h
+# 0yOS0vuUc74hkMRUbHoOuyBlbi9DpehH0WatIaCzRPuOOPr0G0gi3LvCKIrPgVZB
+# /xTDiKsFybRxdmgw3U5eoyISTZFFwVJypeo6NOMLAulBWOpMAFhkcJ7XMYIDBTCC
+# AwECAQEwUzA8MRIwEAYKCZImiZPyLGQBGRYCZnIxFDASBgoJkiaJk/IsZAEZFgRj
+# ZzY3MRAwDgYDVQQDEwdDRzY3IENBAhMtAAHwO7K1KpXny8NbAAEAAfA7MA0GCWCG
+# SAFlAwQCAQUAoIGEMBgGCisGAQQBgjcCAQwxCjAIoAKAAKECgAAwGQYJKoZIhvcN
+# AQkDMQwGCisGAQQBgjcCAQQwHAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUw
+# LwYJKoZIhvcNAQkEMSIEIIj+FnOvdLucUJQcgIYXcWUCVaSgvxIPxojI6yKoxcUn
+# MA0GCSqGSIb3DQEBAQUABIICAF/xDM9/h2m8fKGIxMagrQeiTZgwdxCUXoQknltd
+# QWYU7SYHh9xmvtw50OTKWhMv4rpeQ/XBaPPvoEKWPK2PrU2Iq8UJdzWkI/1tbkau
+# dbNLkGdOv8RVZSIaOY+atqYc/g+QLW+W+ZI/Q6T/tRNeEo26hGcAQIpW8n6BCXzo
+# +uDdOgSDWe1QuMisj6tBowNfrD5CM6twCQHJ+7PcMrD0X5FGGjZsMC3LB4HRHGiF
+# DrHuNA+SAP5pIlVB/OuINcca809y3C4jizzCIWWXitScXAHMvkoTstdQ1jndoQUi
+# E4EXlNxEXEmFxbBmjUPciIFtcBDDMoeLpUHmLyKZVqyKe98oVp08XD8I5wUIsuCV
+# x4KNDExUQEQi3BZTKxfoVUAa+92UzxGFst5+MhXVIchxEGXfQDgE7t0L+kBB9BNW
+# 9ZxhraDGQUd4NHbiz31VAV6hRiyy87gMCe98aqriKVqZC4one70tkAYDa6EH1I1F
+# AknvF4n39MWQ1u+ne+fX8znygDT4MCvndmaMEbmbGis/83c39xZTmk0rTonAFA0R
+# 15wK7hBK9yCF7thfbWfZ/BnCXj3fzEvfNIsSO0LoW9uyOucbngcaZoyTTw3s+ptg
+# 1Tlhl1hNHR7QdPyP2l+v4qggRp1Rq7FsqQjnwGbV/LspUV5u4SwXToWopsNyhq5N
+# qmuY
 # SIG # End signature block

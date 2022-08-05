@@ -8,7 +8,7 @@
 
 .COMPANYNAME AdZero
 
-.COPYRIGHT Copyright 2018-2021 AdZero
+.COPYRIGHT Copyright 2018-2022 AdZero
 
 .TAGS PowerShell GIT
 
@@ -80,6 +80,8 @@ Mode                 LastWriteTime         Length Name
 d-----        02/03/2021     19:23                lib
 d-----        02/03/2021     19:23                bin
 -a----        02/03/2021     19:23            574 NewModuleProject.psm1
+d-----        02/03/2021     19:23                Enums
+d-----        02/03/2021     19:23                Classes
 d-----        02/03/2021     19:23                Private
 d-----        02/03/2021     19:23                Public
 
@@ -118,6 +120,8 @@ Mode                 LastWriteTime         Length Name
 d-----        02/03/2021     19:28                lib
 d-----        02/03/2021     19:28                bin
 -a----        02/03/2021     19:28            574 NewModuleGitProject.psm1
+d-----        02/03/2021     19:23                Enums
+d-----        02/03/2021     19:23                Classes
 d-----        02/03/2021     19:28                Private
 d-----        02/03/2021     19:28                Public
 
@@ -210,11 +214,13 @@ $RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",
 ##################################
 
 $Script:ROOT_MODULE_CONTENT = '#Get public and private function definition files.
+$Enums  = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue )
+$Classes  = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction SilentlyContinue )
 $Public  = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )
 $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
 
 #Dot source the files
-Foreach($import in @($Public + $Private))
+Foreach($import in @($Enums + $Classes + $Public + $Private))
 {
 	Try
 	{
@@ -428,7 +434,9 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 							-TypesToProcess "$Name.Type.ps1xml" `
 							-FormatsToProcess "$Name.Format.ps1xml"
 		
-		#Directories for module's functions
+		#Directories for module's functions, classes and enumerations.
+		New-ProjectItem -Directory -Path $codeFolder -Name "Enums"
+		New-ProjectItem -Directory -Path $codeFolder -Name "Classes"
 		New-ProjectItem -Directory -Path $codeFolder -Name "Private"
 		New-ProjectItem -Directory -Path $codeFolder -Name "Public"
 		
@@ -471,51 +479,68 @@ else
 }
 
 # SIG # Begin signature block
-# MIIIqQYJKoZIhvcNAQcCoIIImjCCCJYCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
-# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUSqdIJUZ/ewAMYtX7A//GPpKu
-# NrWgggUwMIIFLDCCAxSgAwIBAgIQW63XJ86VXrBOrf64HYKdVjANBgkqhkiG9w0B
-# AQ0FADAuMSwwKgYDVQQDDCNBZFplcm8gUG93ZXJTaGVsbCBMb2NhbCBDZXJ0aWZp
-# Y2F0ZTAeFw0yMDAxMDYyMzAwMDBaFw0yNTEyMzAyMzAwMDBaMC4xLDAqBgNVBAMM
-# I0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmljYXRlMIICIjANBgkqhkiG
-# 9w0BAQEFAAOCAg8AMIICCgKCAgEAsKSGndXWnvczniCJM5x2ErFwKWPufBqG2hQT
-# NU/hxjQjOEfv7EewowFCf8hm0OQjNbn4Bv8LtwQCsN2r+iM+CScJ/mipyEpzvG9T
-# q6Hf4jybgBSYH8G5mWUym3LsrlFUt1A5FvfuJbPNNWkoGY6sgG7NTqEICLS46/Zc
-# n9GWNiYoIcMXdouMwWHsYLWnhKSfyE077brSmd4mJFym4OUy5tNiBjyiaEawZ6fE
-# vINXJghk2PfUUYjqBs/10AH75N8AjaBieBiQaZj98LAHJYis618Os/QxR4moRjGG
-# oMikBJMRWmC4ijrONFZsbchyxd/6gXLnUAcB1/F4g1VAXJZ3gPsRja1ItsxNuAcA
-# NEXRt34RKK+ayDul4mHvYy7X4+J88qB//p7ENrA+d1l2GM9GJhzemmgZUVv9Sx39
-# r45VF7zRRluCIRsmOREAKmiqRU6y6xdSp/Fmf0cWt2bBgvqJ5+j4cRHv4KI0veLP
-# SBWRFplbr+emxrhbMHI9m+/RHiT2BI9jBX9awXnaxcYH8IQN87CA/L4y/AhRLsuU
-# +zwaZ5YCyyi3VeAUfMCnJq/1Gfa+gUO2xfWcavVjcSgMatrktSNyCLURSD9OS/89
-# 4kBS2EO5lzvOUKDrE3LfDHORsbhpk7MbP/+TOnSL6heBplT6RE1Voql1k0IoTqyW
-# TtD1YA0CAwEAAaNGMEQwDgYDVR0PAQH/BAQDAgeAMBMGA1UdJQQMMAoGCCsGAQUF
-# BwMDMB0GA1UdDgQWBBRkZ706baqI0oKHJiJwnYJW+FT2rDANBgkqhkiG9w0BAQ0F
-# AAOCAgEAGkzJAIBdoCtUDV9Hz4bqllZ5X4SEEFk3WvlwqLz7S5FyiRFGzaBRfIoJ
-# XTwzczUXxr8UOhN90zBvkPoF+9pJccIEoXs3VuBK/jiv+WQJZtD2qpvmz5ZJMU3G
-# f/mwlDAc/Vof3GJmCIJ/5A4gVRu4j07tH/XWOyfYJEMIBPFOUsBnJCYZzlbKGXoU
-# hDQHLwsDB5Z/+4TwLZPSG3fkUewuTyaqLPotarh6EEWcf6Bxrtwr2SEIwpbshRb5
-# 1T8e2JRDAPFMM49kVqv5IiHq3Zrws4LFDZsXCuYaDABw4B7nDx1GP8En7+hGlVvn
-# Jhr1kr11yrwo4yr9RPvDLIQRNFrvkwwEcwBrGTXuydCNkd+P+knCDLR7T6B38i6o
-# WSiqleN0GgUYddT5s7kSPYjPbQD5ChheHYSTAiJBNvip+UBkTYsj9sxYz7sajmP0
-# vWhuXNqMgOj49KYJ3Q348Z93cMSBUZ4DYQoHToHtf9fXzHQGZtAOasDYayhUh08b
-# 1pr/zikZKfzH4Afgj5ffHLifxmWTUsocsIrXmkgScKDizW+vONhiljmS8FxacZmm
-# Xm+q+cDJ+2CrzlQSyPWN5f5r1DzyxC+7SA9uRfQi1meDSo0W9jrsKx+1IBE6D1DY
-# l/km38aF2oeAPBhn/43itNPYg2yP+nvWt/Fodn/t7BBk8upTPFYxggLjMIIC3wIB
-# ATBCMC4xLDAqBgNVBAMMI0FkWmVybyBQb3dlclNoZWxsIExvY2FsIENlcnRpZmlj
-# YXRlAhBbrdcnzpVesE6t/rgdgp1WMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEM
-# MQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
-# gjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBRDCzGpp7HN1rwO
-# BID+D5DLjgQb4jANBgkqhkiG9w0BAQEFAASCAgA4e/u05jkz9X/TBxQgaRRZb4BF
-# 5OyUr5v9GLqcLZxuyDRoaoRF5prjgHGy0CChtDCZDIpkahnmRT+jbxFDagy/Jht3
-# VkY2VC5jappVPLCx/cauJJOOPYjaD64TgoFXPy5j8ix+YHxLe1bF04z0UD9ZHUXr
-# mdsNZpQXbT1UTKDi4tM1ue2CYDVf/tG/KPtAhmz+uGyn9iAkGWgMWobRr6jnDJlD
-# SUqXZi+yRuBGyw7Vxkg4d8DfFy+YMS16g0XqULh4BYQd6+zVSCD/VUAslD2jYpIo
-# TqaThbArCi1vZAgVb8367l7Gayz5ioxoDcG3LsRGUl3L96ccQZVFdW5ZA1lySi+H
-# mD3XLAsWMzRpTQFZL7UkuV7reWSH9Xh30bGbuPwVbD1DPyZpQ1u44EMt243C3o5p
-# LFRo249Xga8pWzfAN+lw2A34KUgYjrNRFNA7Ns3wmlwRxH3Lp+pkI23UR8At6j3a
-# OgxvmZWh/p/ksucsb8ZM0pH05n4Yz2notA3mxaErQQvGyRXnOhjKWMMxxJBR/o7C
-# 1VdSJtmcFdjatf1ReHAliSgbRRtcMDagQ6edCPUQSdxpwM7jGWSQNySQSAEjMWcz
-# +0Wt9TmCTN1mOjNaOUV0XrCHInqmz1J8y0b+FZtJe7iNZosIyBETlky8waEDk5ij
-# /e55sPrANQSjQkObvA==
+# MIILzwYJKoZIhvcNAQcCoIILwDCCC7wCAQExDzANBglghkgBZQMEAgEFADB5Bgor
+# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAD3xWG8f7h8Ylt
+# 6FS7BEoA93g0k28FJ7pdfU3bbOihxqCCCCAwgggcMIIGBKADAgECAhMtAAHwO7K1
+# KpXny8NbAAEAAfA7MA0GCSqGSIb3DQEBDQUAMDwxEjAQBgoJkiaJk/IsZAEZFgJm
+# cjEUMBIGCgmSJomT8ixkARkWBGNnNjcxEDAOBgNVBAMTB0NHNjcgQ0EwHhcNMTQw
+# NzI0MDc0NDE3WhcNMjQwNzIxMDc0NDE3WjBcMRIwEAYKCZImiZPyLGQBGRYCZnIx
+# FDASBgoJkiaJk/IsZAEZFgRjZzY3MRowGAYDVQQLExFTZXJ2aWNlcyBBY2NvdW50
+# czEUMBIGA1UEAxMLU2VydmljZUNlcnQwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAw
+# ggIKAoICAQDB+enIz1Rw0UdMiOAm4iWsgHjjS6xuMQs5e5SCUUdzxRM1sDHhPgkt
+# YgEQOTJZZvSiSsUUumPvwVTZJxzFjWVKxO9Imk3m7qQZIBIlbFXt4r43yLh9K6lX
+# rYvNMYB6TFvaLmpcgO7pjJyKjbju2Bv3tEX+894LmPsqYhRb3CCB53Hb2cjEa6ra
+# vzsi1fL1F1r7BS0WuXjAEsmj/6vOOg06gSRcoD4Nb+rwfoVpoFEyL/SK3/DzExi4
+# 9qW2A+GL05Vu+INk9wk6sJPNpZJl/LESMNb2xXCLqpPSr5EYQLwwqgN4ciSUq9Tm
+# +AKLXOsOTtbcXonoVtUVSjsGk2nYj4H9TSCvXsGMUpyOGn1RXFaSLlVwmgbNd9kH
+# iy22i+Hm6jxfiEgiLRvibdIdU0JNMN+fVKzrpXLwY8r6CRAOni7MVOePeZHZX6vy
+# JMCOPQZlPx0gwLZ2Yd122hNkXWpOJ5l7GqVqstc5fo3betRzTn2OXkjblq9T1rtn
+# Tgnd7dGGUCr8o2+ANz3aDkJuonFcZ2lKHOtGB086XhLd6bsw0xKxCaxK9XPzh64J
+# 2pY0QSwNvlja4braqUf3i3yluh4SAf+zwJTh5a/46RGGRa1tdML23G6ij5jpaBmL
+# bnGk1VyoUr1gCWGHEPcBNirnDv4ZVUUsussCvgWqtvljbpA95sqcTQIDAQABo4IC
+# 9TCCAvEwPgYJKwYBBAGCNxUHBDEwLwYnKwYBBAGCNxUIgoq1H4HS7myDzZEPhNrj
+# UIWX6XuBRoHk8FeH+KUAAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMAsGA1Ud
+# DwQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYBBQUH
+# AwMwHQYDVR0OBBYEFJXVQbMlPArU3fa+7RU1C0wX4JMaMB8GA1UdIwQYMBaAFKoe
+# U82wSmTpY8Vq3GFNQPlIGLzYMIHwBgNVHR8EgegwgeUwgeKggd+ggdyGgapsZGFw
+# Oi8vL0NOPUNHNjclMjBDQSgxKSxDTj1DQSxDTj1DRFAsQ049UHVibGljJTIwS2V5
+# JTIwU2VydmljZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1jZzY3
+# LERDPWZyP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZT9vYmplY3RDbGFz
+# cz1jUkxEaXN0cmlidXRpb25Qb2ludIYtaHR0cDovL0NBLmNnNjcuZnIvQ2VydEVu
+# cm9sbC9DRzY3JTIwQ0EoMSkuY3JsMIH9BggrBgEFBQcBAQSB8DCB7TCBpAYIKwYB
+# BQUHMAKGgZdsZGFwOi8vL0NOPUNHNjclMjBDQSxDTj1BSUEsQ049UHVibGljJTIw
+# S2V5JTIwU2VydmljZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1j
+# ZzY3LERDPWZyP2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZp
+# Y2F0aW9uQXV0aG9yaXR5MEQGCCsGAQUFBzAChjhodHRwOi8vQ0EuY2c2Ny5mci9D
+# ZXJ0RW5yb2xsL0NBLmNnNjcuZnJfQ0c2NyUyMENBKDEpLmNydDAvBgNVHREEKDAm
+# oCQGCisGAQQBgjcUAgOgFgwUc2VydmljZS5jZXJ0QGNnNjcuZnIwDQYJKoZIhvcN
+# AQENBQADggIBAF/E85ds62m9EM13OER+EckaaCKufbDVTgBJJ0WCCTWMHsYIAJWi
+# xwevEhQS3+QLefQkA5UURfNLY5h+KpHtWOUSUhiSPkD82ngRiiphqJWbl9NwKm+q
+# GdjKUIBPgH3b19Halkx0RGaRbcW1JBLGD76VRCHLV8nTQD31/+PVTPuALGn411u5
+# vIfJgRCSkW/TG0Xg37zMKt7sanSUmfFr9KJfCT6Ut/7+tdcp4cPeeNlHEMHPzs1b
+# sTeSE98eJG8CkIK9vMxDAgJsOrp5hb+M+YCnRYJMeT9sMyE0+ZA5iYZ8AnOSgX+2
+# EPHLBbXqdngNvTIzJ4oJZPYYVz9JkPtCtIVHu60RsPZMd9Fllv5mbIkUTtShZjvO
+# LBWDe/dirCZYyIh+FLpl1Nmgm6PPqgisTtm1yeWv6+GFZG7TmlTqpBkGSsO002Fa
+# D++o4E/eRIit7BAaUzVT0mStzFEgfhEOwS+bCx8d7LKVklmdtsNYRGRYkiC/PZVl
+# sxkPeGOqHalVtcWMEAOw0aHM9q2H6gmXNUxrCg3I6q32fy6elAJH1/NBeMR+WQ3h
+# 0yOS0vuUc74hkMRUbHoOuyBlbi9DpehH0WatIaCzRPuOOPr0G0gi3LvCKIrPgVZB
+# /xTDiKsFybRxdmgw3U5eoyISTZFFwVJypeo6NOMLAulBWOpMAFhkcJ7XMYIDBTCC
+# AwECAQEwUzA8MRIwEAYKCZImiZPyLGQBGRYCZnIxFDASBgoJkiaJk/IsZAEZFgRj
+# ZzY3MRAwDgYDVQQDEwdDRzY3IENBAhMtAAHwO7K1KpXny8NbAAEAAfA7MA0GCWCG
+# SAFlAwQCAQUAoIGEMBgGCisGAQQBgjcCAQwxCjAIoAKAAKECgAAwGQYJKoZIhvcN
+# AQkDMQwGCisGAQQBgjcCAQQwHAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUw
+# LwYJKoZIhvcNAQkEMSIEIDdew+BvKCng9sSwXyUGy5/c4dDHMvhhhDrRukGEs/F8
+# MA0GCSqGSIb3DQEBAQUABIICAK5obFzrptanqo8PrRiwC5CzTzymR6dXizYyj581
+# /aZwazrpYTkFR6htWsr0U5aRPLObJNMA1kbDBBWcJTzbKnA+kh3TH9FNMHPQrrXS
+# OO+SmkAWpvbKEPRvTolkcRDbJIrJXM3XldD9qH+lvNe42UdGqZqsEhb+jgPR/kTI
+# xjH6JRTTaGsJFFpTGExHn5U4pu4MhliKSibhoBEwX+ooOsaZZtSbTEwXdgrgAUh9
+# YWux6c3FSANOZSLq4Cn2Q96wR0o0utF3tbXV+g7jqCJsVLCGdAIekvIw5dJkGw0l
+# zNTh8FGCG4l8YuJYtUKZILCU1Cn16X19r8JXTpHTLKnvbzgkYcrS6IE78NwRT/Ez
+# FKqIVnStWUCxmsAvQz6DkF9pLXRfSIm259MGir1nkxBsBFKbZeBQqd+XwFLd9U9Z
+# I0pwM1z14ncUIwc5RHbCiDlol/z9hGhTQWYOUWVLDUy1VDCdOdBzQXLKmhIn0Scr
+# VsZ8wDxa8tcCpBH0qKs+YUmh3cFzKSMEIDLrMI9J4S8UY3MGSAbv5O9k96JgjJIH
+# PBJciVfqsAqqAFkH+C5SXRhR0X8mW75W7M7yXiwN1wb1lhPpKCrbu9adewIs8la9
+# TxozcymdbNOdoJBRtp8iWaDyhQxDmR+VZFTLM4QiKleWyOnH/KEA7WE7adCyxwt6
+# RQSK
 # SIG # End signature block
