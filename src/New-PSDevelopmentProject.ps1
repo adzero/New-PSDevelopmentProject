@@ -4,7 +4,7 @@
 
 .GUID 32d9b358-2002-4dbb-9393-d068333a60e6
 
-.AUTHOR AdZero (adzero.git@gmail.com)
+.AUTHOR AdZero
 
 .COMPANYNAME AdZero
 
