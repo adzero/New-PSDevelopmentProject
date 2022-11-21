@@ -252,7 +252,7 @@ $Script:FORMAT_PS1XML_DEFAULT_CONTENT = '<?xml version="1.0" encoding="utf-8"?>
 $Script:README = "# $Name
 
 ---
-#### $Description.
+#### $Description
 ---"
 
 $Script:LICENSE = "MIT License
