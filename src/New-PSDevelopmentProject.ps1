@@ -388,6 +388,7 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 			#First commit and dev branch creation
 			$temp = Get-Location
 			$null = Set-Location $path -PassThru 2>$null
+			&git branch -m master main
 			&git add . 2>$null
 			&git commit -m "Repository creation" 2>$null
 			&git branch "develop" 2>$null
