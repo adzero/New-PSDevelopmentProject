@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed name of git primary branch from master to main. 
 - Changed script structure, deleting function to avoid declaring parameters twice.
 
 ### Added
