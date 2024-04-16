@@ -8,7 +8,7 @@
 
 .COMPANYNAME AdZero
 
-.COPYRIGHT Copyright 2018-2022 AdZero
+.COPYRIGHT Copyright 2018-2024 AdZero
 
 .TAGS New-PSDevelopmentProject Test Pester
 

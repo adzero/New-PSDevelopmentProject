@@ -2,7 +2,7 @@
 
 ## About
 
-New-PSDevelopmentProject.ps1 is a PowerShell script that creates a new file structure for the developement of a PowerShell script or module with an optional Git repository.
+New-PSDevelopmentProject.ps1 is a PowerShell script that creates a new file structure for the development of a PowerShell script or module with an optional Git repository.
 The project contains :
 
 - License file (MIT License by default)

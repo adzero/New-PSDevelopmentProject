@@ -8,7 +8,7 @@
 
 .COMPANYNAME AdZero
 
-.COPYRIGHT Copyright 2018-2022 AdZero
+.COPYRIGHT Copyright 2018-2024 AdZero
 
 .TAGS PowerShell GIT
 
@@ -30,10 +30,10 @@
 
 <#
 .SYNOPSIS
-Creates a new file structure for the developement of a PowerShell script or module. 
+Creates a new file structure for the development of a PowerShell script or module. 
 
 .DESCRIPTION 
-Creates a new file structure for the developement of a PowerShell script or module. 
+Creates a new file structure for the development of a PowerShell script or module. 
 
 .EXAMPLE
 PS> New-PSDevelopmentProject.ps1 -Name NewScriptProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ScriptProject -Author Adzero -Description "My awesome new PowerShell script project !"
