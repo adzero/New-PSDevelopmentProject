@@ -15,11 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed script structure, deleting function to avoid declaring parameters twice.
 - Changed name of git primary branch from master to main. 
+- Outputs of project item creation and git command muted.
 
 ### Added
 
 - Added Enums and Classes folders to module source folder. 
 - FormatFile and TypeFile switch parameters to add custom display format or type definition files to the project.
+- Passthru switch parameter to return the object representing the project directory. 
 
 ## 1.1.0 - 2021-03-02
 

@@ -160,6 +160,9 @@ Use this option to include a git repository for the project.
 .PARAMETER DisableProjectCategoryFolder
  Use this option to not include Modules or Scripts folder in the project root path.
 
+.PARAMETER Passthru
+Use this option to return the object representing the project directory.
+
 .INPUTS
 None
 
@@ -218,7 +221,9 @@ Param(
 	[Parameter(HelpMessage = 'Use this option to include a git repository for the project.')]
 	[switch]$GitRepository,
 	[Parameter(HelpMessage = 'Use this option to not include Modules or Scripts folder in the project root path.')]
-	[switch]$DisableProjectCategoryFolder)
+	[switch]$DisableProjectCategoryFolder,
+	[Parameter(HelpMessage = 'Use this option to return the object representing the project directory.')]
+	[switch]$Passthru)
 
 ##################################
 # Constants and global variables #
@@ -379,7 +384,8 @@ else
 
 #Creating directory structure
 #Root directory
-if (New-ProjectItem -Directory -Path $path -Name $Name)
+$rootDirectory = New-ProjectItem -Directory -Path $path -Name $Name
+if ($rootDirectory)
 {
 	$path = Join-Path -Path $path -ChildPath $Name
 
@@ -389,22 +395,22 @@ if (New-ProjectItem -Directory -Path $path -Name $Name)
 		if (Get-Command "git" -ErrorAction SilentlyContinue)
 		{
 			#Empty gitignore file
-			New-ProjectItem -File -Path $path -Name ".gitignore"
+			New-ProjectItem -File -Path $path -Name ".gitignore" | Out-Null
 			
 			#Create repository
 			$env:GIT_DIR = Join-Path -Path $path -ChildPath ".git"
 			$env:GIT_WORK_TREE = $path
-			&git init 2>$null
+			&git init *> $null
 
 			#First commit and dev branch creation
 			$temp = Get-Location
-			$null = Set-Location $path -PassThru 2>$null
-			&git branch -m master main
-			&git add . 2>$null
-			&git commit -m "Repository creation" 2>$null
-			&git branch "develop" 2>$null
-			&git checkout "develop" 2>$null
-			$null = Set-Location $temp -PassThru | Out-Null
+			Set-Location $path -PassThru *> $null
+			&git branch -m master main *> $null
+			&git add . *> $null
+			&git commit -m "Repository creation" *> $null
+			&git branch "develop"
+			&git checkout "develop" *> $null
+			Set-Location $temp -PassThru | Out-Null
 		}
 		else
 		{
@@ -413,15 +419,15 @@ if (New-ProjectItem -Directory -Path $path -Name $Name)
 	}
 
 	#README, License,...
-	New-ProjectItem -File -Path $path -Name "README.md" -Content $Script:README
-	New-ProjectItem -File -Path $path -Name "LICENSE" -Content $Script:LICENSE
+	New-ProjectItem -File -Path $path -Name "README.md" -Content $Script:README | Out-Null
+	New-ProjectItem -File -Path $path -Name "LICENSE" -Content $Script:LICENSE | Out-Null
 
 	#Script/Module code directory tree
 	$codeFolder = New-ProjectItem -Directory -Path $path -Name "src"
 
 	##Bin and libraries folders
-	New-ProjectItem -Directory -Path $codeFolder -Name "lib"
-	New-ProjectItem -Directory -Path $codeFolder -Name "bin"
+	New-ProjectItem -Directory -Path $codeFolder -Name "lib" | Out-Null
+	New-ProjectItem -Directory -Path $codeFolder -Name "bin" | Out-Null
 
 	#Type definition file
 	if ($TypeFile.IsPresent)
@@ -439,7 +445,7 @@ if (New-ProjectItem -Directory -Path $path -Name $Name)
 	if ($PSCmdlet.ParameterSetName -eq "Module")
 	{
 		#Root module file
-		New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $Script:ROOT_MODULE_CONTENT
+		New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $Script:ROOT_MODULE_CONTENT | Out-Null
 		#Getting current PowerShell Version
 		$version = $PSVersionTable.PSVersion | Select-Object -ExpandProperty Major
 
@@ -465,14 +471,14 @@ if (New-ProjectItem -Directory -Path $path -Name $Name)
 		New-ModuleManifest @commandParameters
 		
 		#Directories for module's functions, classes and enumerations.
-		New-ProjectItem -Directory -Path $codeFolder -Name "Enums"
-		New-ProjectItem -Directory -Path $codeFolder -Name "Classes"
-		New-ProjectItem -Directory -Path $codeFolder -Name "Private"
-		New-ProjectItem -Directory -Path $codeFolder -Name "Public"
+		New-ProjectItem -Directory -Path $codeFolder -Name "Enums" | Out-Null
+		New-ProjectItem -Directory -Path $codeFolder -Name "Classes" | Out-Null
+		New-ProjectItem -Directory -Path $codeFolder -Name "Private" | Out-Null
+		New-ProjectItem -Directory -Path $codeFolder -Name "Public" | Out-Null
 		
 		##Help file(s)
 		$childDirectory = New-ProjectItem -Directory -Path $codeFolder -Name "en-US"
-		New-ProjectItem -File -Path $childDirectory -Name "about_$Name.help.txt"
+		New-ProjectItem -File -Path $childDirectory -Name "about_$Name.help.txt" | Out-Null
 	}
 	else
 	{
@@ -490,13 +496,18 @@ if (New-ProjectItem -Directory -Path $path -Name $Name)
 		{
 			$temp = Get-Location
 			$null = Set-Location $path -PassThru | Out-Null
-			&git add . 2>$null
+			&git add . *> $null
 			$null = Set-Location $temp -PassThru | Out-Null
 		}
 		else
 		{
 			Write-Warning -Message "Git executable not found. Check its existence and add it to your PATH environment variable."
 		}
+	}
+
+	if($Passthru.IsPresent)
+	{
+		$rootDirectory
 	}
 }
 elseif (Test-Path -Path $path -PathType Container)
