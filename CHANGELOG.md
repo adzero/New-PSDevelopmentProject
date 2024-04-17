@@ -18,8 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added default type.ps1xml file to project.
 - Added Enums and Classes folders to module source folder. 
+- FormatFile and TypeFile switch parameters to add custom display format or type definition files to the project.
 
 ## 1.1.0 - 2021-03-02
 

@@ -54,7 +54,6 @@ Mode                 LastWriteTime         Length Name
 
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
--a----        02/03/2021     19:19             63 NewScriptProject.Format.ps1xml
 d-----        02/03/2021     19:19                lib
 d-----        02/03/2021     19:19                bin
 
@@ -76,7 +75,6 @@ Mode                 LastWriteTime         Length Name
 
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
--a----        02/03/2021     19:23             63 NewModuleProject.Format.ps1xml
 d-----        02/03/2021     19:23                lib
 d-----        02/03/2021     19:23                bin
 -a----        02/03/2021     19:23            574 NewModuleProject.psm1
@@ -116,7 +114,6 @@ Initialized empty Git repository in C:/Users/adzero/Documents/WindowsPowerShell/
 
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
--a----        02/03/2021     19:28             63 NewModuleGitProject.Format.ps1xml
 d-----        02/03/2021     19:28                lib
 d-----        02/03/2021     19:28                bin
 -a----        02/03/2021     19:28            574 NewModuleGitProject.psm1
@@ -151,6 +148,12 @@ Use this option to create a project structure for a script.
 .PARAMETER ModuleProject
 Use this option to create a project structure for a module.
 
+.PARAMETER FormatFile
+Use this option to add an object display format definition file.
+
+.PARAMETER TypeFile
+Use this option to add an extended type data definition file.
+
 .PARAMETER GitRepository
 Use this option to include a git repository for the project.
 
@@ -164,50 +167,58 @@ None
 System.IO.FileInfo
 System.IO.DirectoryInfo
 
+.NOTES
+https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_types.ps1xml
+https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_format.ps1xml
+
 #>
-[CmdletBinding(DefaultParameterSetName="Script")]
+[CmdletBinding(DefaultParameterSetName = "Script")]
 Param(
-[Parameter(ParameterSetName="Script", Position=0, Mandatory=$true, HelpMessage='New project name.')]
-[Parameter(ParameterSetName="Module", Position=0, Mandatory=$true, HelpMessage='New project name.')]
-[string]$Name,
-[Parameter(ParameterSetName="Script", Position=1, Mandatory=$true, HelpMessage='New project author.')]
-[Parameter(ParameterSetName="Module", Position=1, Mandatory=$true, HelpMessage='New project author.')]
-[string]$Author,
-[Parameter(ParameterSetName="Script", Position=2, Mandatory=$true, HelpMessage='New project description.')]
-[Parameter(ParameterSetName="Module", Position=2, Mandatory=$true, HelpMessage='New project description.')]
-[string]$Description,
-[Parameter(HelpMessage='The root path where to create new project directory.')]
-[ValidateScript({ 
+	[Parameter(ParameterSetName = "Script", Position = 0, Mandatory = $true, HelpMessage = 'New project name.')]
+	[Parameter(ParameterSetName = "Module", Position = 0, Mandatory = $true, HelpMessage = 'New project name.')]
+	[string]$Name,
+	[Parameter(ParameterSetName = "Script", Position = 1, Mandatory = $true, HelpMessage = 'New project author.')]
+	[Parameter(ParameterSetName = "Module", Position = 1, Mandatory = $true, HelpMessage = 'New project author.')]
+	[string]$Author,
+	[Parameter(ParameterSetName = "Script", Position = 2, Mandatory = $true, HelpMessage = 'New project description.')]
+	[Parameter(ParameterSetName = "Module", Position = 2, Mandatory = $true, HelpMessage = 'New project description.')]
+	[string]$Description,
+	[Parameter(HelpMessage = 'The root path where to create new project directory.')]
+	[ValidateScript({ 
 
-	if($_ -is [System.IO.FileSystemInfo])
-	{
-		$value = $_.FullName
-	}
-	elseif([System.IO.Path]::IsPathRooted($_))
-	{
-		$value = [string]$_
-	}
-	else
-	{
-		$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
-	}
+			if ($_ -is [System.IO.FileSystemInfo])
+			{
+				$value = $_.FullName
+			}
+			elseif ([System.IO.Path]::IsPathRooted($_))
+			{
+				$value = [string]$_
+			}
+			else
+			{
+				$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
+			}
 
-	if(!(Test-Path -LiteralPath $value -PathType Container))
-	{
-		throw "Provided path is not a valid directory path: '$value'" 
-	}
+			if (!(Test-Path -LiteralPath $value -PathType Container))
+			{
+				throw "Provided path is not a valid directory path: '$value'" 
+			}
 	
-	return $true
-})]
-$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
-[Parameter(ParameterSetName="Script", Mandatory=$true, HelpMessage='Use this option to create a project structure for a script.')]
-[switch]$ScriptProject,
-[Parameter(ParameterSetName="Module", Mandatory=$true, HelpMessage='Use this option to create a project structure for a module.')]
-[switch]$ModuleProject,
-[Parameter(HelpMessage='Use this option to include a git repository for the project.')]
-[switch]$GitRepository,
-[Parameter(HelpMessage='Use this option to not include Modules or Scripts folder in the project root path.')]
-[switch]$DisableProjectCategoryFolder)
+			return $true
+		})]
+	$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
+	[Parameter(ParameterSetName = "Script", Mandatory = $true, HelpMessage = 'Use this option to create a project structure for a script.')]
+	[switch]$ScriptProject,
+	[Parameter(ParameterSetName = "Module", Mandatory = $true, HelpMessage = 'Use this option to create a project structure for a module.')]
+	[switch]$ModuleProject,
+	[Parameter(HelpMessage = 'Use this option to add an object display format definition file.')]
+	[switch]$FormatFile,
+	[Parameter(HelpMessage = 'Use this option to add an extended type data definition file.')]
+	[switch]$TypeFile,
+	[Parameter(HelpMessage = 'Use this option to include a git repository for the project.')]
+	[switch]$GitRepository,
+	[Parameter(HelpMessage = 'Use this option to not include Modules or Scripts folder in the project root path.')]
+	[switch]$DisableProjectCategoryFolder)
 
 ##################################
 # Constants and global variables #
@@ -291,58 +302,58 @@ System.IO.FileInfo
 #>
 function New-ProjectItem
 {
-	[CmdletBinding(DefaultParameterSetName="File")]
+	[CmdletBinding(DefaultParameterSetName = "File")]
 	Param(
-		[Parameter(Position=0, Mandatory=$true, HelpMessage='Location of the item')]
+		[Parameter(Position = 0, Mandatory = $true, HelpMessage = 'Location of the item')]
 		[ValidateScript({ 
 		
-			if($_ -is [System.IO.FileSystemInfo])
-			{
-				$value = $_.FullName
-			}
-			elseif([System.IO.Path]::IsPathRooted($_))
-			{
-				$value = [string]$_
-			}
-			else
-			{
-				$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
-			}
+				if ($_ -is [System.IO.FileSystemInfo])
+				{
+					$value = $_.FullName
+				}
+				elseif ([System.IO.Path]::IsPathRooted($_))
+				{
+					$value = [string]$_
+				}
+				else
+				{
+					$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
+				}
 
-			if(!(Test-Path -LiteralPath $value -PathType Container))
-			{
-				throw "Provided path is not a valid directory path: '$value'" 
-			}
+				if (!(Test-Path -LiteralPath $value -PathType Container))
+				{
+					throw "Provided path is not a valid directory path: '$value'" 
+				}
 			
-			return $true
-		})]
+				return $true
+			})]
 		[string]$Path,
-		[Parameter(ParameterSetName="File", Position=1, Mandatory=$true, HelpMessage='File name')]
-		[Parameter(ParameterSetName="Directory", Position=1, Mandatory=$true, HelpMessage='Directory name')]
+		[Parameter(ParameterSetName = "File", Position = 1, Mandatory = $true, HelpMessage = 'File name')]
+		[Parameter(ParameterSetName = "Directory", Position = 1, Mandatory = $true, HelpMessage = 'Directory name')]
 		[string]$Name, 
-		[Parameter(ParameterSetName="File", Mandatory=$true, HelpMessage='Creates a new file')]
+		[Parameter(ParameterSetName = "File", Mandatory = $true, HelpMessage = 'Creates a new file')]
 		[switch]$File,
-		[Parameter(ParameterSetName="File", Position=2, HelpMessage='Content of the new file')]
+		[Parameter(ParameterSetName = "File", Position = 2, HelpMessage = 'Content of the new file')]
 		[string]$Content,
-		[Parameter(ParameterSetName="Directory", Mandatory=$true, HelpMessage='Creates a new directory')]
+		[Parameter(ParameterSetName = "Directory", Mandatory = $true, HelpMessage = 'Creates a new directory')]
 		[switch]$Directory
 	)
 
 	
-	$newItemType = @{$true="File";$false="Container"}[$PSCmdlet.ParameterSetName -eq "File"]
+	$newItemType = @{$true = "File"; $false = "Container" }[$PSCmdlet.ParameterSetName -eq "File"]
 	$newItemPath = Join-Path -Path $Path -ChildPath $Name
 	$result = New-Item -Path $newItemPath -ItemType $newItemType -ErrorAction SilentlyContinue
 
-	if($result -and $PSCmdlet.ParameterSetName -eq "File" -and ![string]::IsNullOrWhiteSpace($Content))
+	if ($result -and $PSCmdlet.ParameterSetName -eq "File" -and ![string]::IsNullOrWhiteSpace($Content))
 	{
 		$Content | Out-File -FilePath $newItemPath -Encoding UTF8
 	}
 	
-	if($result)
+	if ($result)
 	{
 		return $result
 	}
-	elseif(Test-Path -Path $path -PathType $newItemType)
+	elseif (Test-Path -Path $path -PathType $newItemType)
 	{
 		throw "Item '$newItemPath' already exists. Rename or remove it and retry."
 	}
@@ -357,9 +368,9 @@ function New-ProjectItem
 ########################
 
 #Creating project root path
-if(-not $DisableProjectCategoryFolder.IsPresent)
+if (-not $DisableProjectCategoryFolder.IsPresent)
 {
-	$path = (New-Item -Path $RootPath -Name (@{$true="Modules";$false="Scripts"}[$PSCmdlet.ParameterSetName -eq "Module"]) -ItemType Directory -Force).FullName
+	$path = (New-Item -Path $RootPath -Name (@{$true = "Modules"; $false = "Scripts" }[$PSCmdlet.ParameterSetName -eq "Module"]) -ItemType Directory -Force).FullName
 }
 else
 {
@@ -368,14 +379,14 @@ else
 
 #Creating directory structure
 #Root directory
-if(New-ProjectItem -Directory -Path $path -Name $Name)
+if (New-ProjectItem -Directory -Path $path -Name $Name)
 {
 	$path = Join-Path -Path $path -ChildPath $Name
 
 	#Git repository if enabled
-	if($GitRepository)
+	if ($GitRepository)
 	{
-		if(Get-Command "git" -ErrorAction SilentlyContinue)
+		if (Get-Command "git" -ErrorAction SilentlyContinue)
 		{
 			#Empty gitignore file
 			New-ProjectItem -File -Path $path -Name ".gitignore"
@@ -408,32 +419,50 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 	#Script/Module code directory tree
 	$codeFolder = New-ProjectItem -Directory -Path $path -Name "src"
 
-	##Type definition file
-	New-ProjectItem -File -Path $codeFolder -Name "$Name.Type.ps1xml" -Content $Script:TYPE_PS1XML_DEFAULT_CONTENT
-
-	##Format definition file
-	New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:FORMAT_PS1XML_DEFAULT_CONTENT
-
 	##Bin and libraries folders
 	New-ProjectItem -Directory -Path $codeFolder -Name "lib"
 	New-ProjectItem -Directory -Path $codeFolder -Name "bin"
 
+	#Type definition file
+	if ($TypeFile.IsPresent)
+	{
+		New-ProjectItem -File -Path $codeFolder -Name "$Name.Types.ps1xml" -Content $Script:TYPE_PS1XML_DEFAULT_CONTENT | Out-Null
+	}
+
+	#Format definition file
+	if ($FormatFile.IsPresent)
+	{
+		New-ProjectItem -File -Path $codeFolder -Name "$Name.Format.ps1xml" -Content $Script:FORMAT_PS1XML_DEFAULT_CONTENT | Out-Null
+	}
+
 	##Script/Module files
-	if($PSCmdlet.ParameterSetName -eq "Module")
+	if ($PSCmdlet.ParameterSetName -eq "Module")
 	{
 		#Root module file
 		New-ProjectItem -File -Path $codeFolder -Name "$Name.psm1" -Content $Script:ROOT_MODULE_CONTENT
 		#Getting current PowerShell Version
 		$version = $PSVersionTable.PSVersion | Select-Object -ExpandProperty Major
 
-		New-ModuleManifest -Path (Join-Path -Path $codeFolder -ChildPath "$Name.psd1") `
-							-RootModule "$Name.psm1" `
-							-Description $Description `
-							-PowerShellVersion $PSVersionTable.PSVersion `
-							-Author $Author `
-							-Copyright "Copyright $((Get-Date).Year) $Author" `
-							-TypesToProcess "$Name.Type.ps1xml" `
-							-FormatsToProcess "$Name.Format.ps1xml"
+		$commandParameters = @{
+			"Path"              = (Join-Path -Path $codeFolder -ChildPath "$Name.psd1");
+			"RootModule"        = "$Name.psm1";
+			"Description"       = $Description;
+			"PowerShellVersion" = $PSVersionTable.PSVersion;
+			"Author"            = $Author;
+			"Copyright"         = "Copyright $(Get-Date | Select-Object -ExpandProperty Year) $Author"
+		}
+
+		if($FormatFile.IsPresent)
+		{
+			$commandParameters.Add("FormatsToProcess","$Name.Format.ps1xml")
+		}
+
+		if($TypeFile.IsPresent)
+		{
+			$commandParameters.Add("TypesToProcess","$Name.Types.ps1xml")
+		}
+
+		New-ModuleManifest @commandParameters
 		
 		#Directories for module's functions, classes and enumerations.
 		New-ProjectItem -Directory -Path $codeFolder -Name "Enums"
@@ -455,9 +484,9 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 	New-ScriptFileInfo -Path (Join-Path -Path $childDirectory -ChildPath "$Name.Tests.ps1") -Version "1.0.0" -Author $Author -Description "Tests for $Name project"
 
 	#Add created directories and files to Git repository if enabled
-	if($GitRepository)
+	if ($GitRepository)
 	{
-		if(Get-Command "git" -ErrorAction SilentlyContinue)
+		if (Get-Command "git" -ErrorAction SilentlyContinue)
 		{
 			$temp = Get-Location
 			$null = Set-Location $path -PassThru | Out-Null
@@ -470,7 +499,7 @@ if(New-ProjectItem -Directory -Path $path -Name $Name)
 		}
 	}
 }
-elseif(Test-Path -Path $path -PathType Container)
+elseif (Test-Path -Path $path -PathType Container)
 {
 	Write-Host "Directory '$path' already exists. Rename or remove it and retry." -ForegroundColor Red
 }
