@@ -175,6 +175,9 @@ https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/ab
 https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_format.ps1xml
 
 #>
+
+#Requires -Modules @{ModuleName = "PowerShellGet"; ModuleVersion = "2.2.5"; GUID = "1d73a601-4a6c-43c5-ba3f-619b18bbb404" })
+
 [CmdletBinding(DefaultParameterSetName = "Script")]
 Param(
 	[Parameter(ParameterSetName = "Script", Position = 0, Mandatory = $true, HelpMessage = 'New project name.')]
