@@ -407,7 +407,7 @@ Param(
 	[Parameter(ParameterSetName = "Module", HelpMessage = "Specifies all items that are included in the module.`nThis key is designed to act as a module inventory. The files listed in the key are included when the module is published, but any functions aren't automatically exported.")]
 	[string[]]
 	$FileList,
-	[Parameter(HelpMessage = "Lists all modules that are included in this module.`nEnter each module name as a string or as a hash table with ModuleName and ModuleVersion keys. The hash table can also have an optional GUID key. You can combine strings and hash tables in the parameter value.`nThis key is designed to act as a module inventory. The modules that are listed in the value of this key aren't automatically processed.")]
+	[Parameter(ParameterSetName = "Module", HelpMessage = "Lists all modules that are included in this module.`nEnter each module name as a string or as a hash table with ModuleName and ModuleVersion keys. The hash table can also have an optional GUID key. You can combine strings and hash tables in the parameter value.`nThis key is designed to act as a module inventory. The modules that are listed in the value of this key aren't automatically processed.")]
 	[ValidateScript({
 			$input = $_
 			$result = ($input -is [array]) -or ($input -is [string]) -or ($input -is [hashtable])
