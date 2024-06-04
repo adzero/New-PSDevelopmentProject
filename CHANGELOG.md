@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## In progress
+## 2.0.0 - In progress
 
 ### Fixed
 
@@ -21,7 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added Enums and Classes folders to module source folder. 
 - FormatFile and TypeFile switch parameters to add custom display format or type definition files to the project.
+- PesterTests switch parameter to enable creation of a tests directory with a default Pester script.
+- New parameters for almost all properties supported by New-ScriptFileInfo or New-ModuleManifest commands.
 - Passthru switch parameter to return the object representing the project directory. 
+- Support for WhatIf and Confirm parameters.
 - PowerShellGet 2.2.5+ module dependency added.
 
 ## 1.1.0 - 2021-03-02
