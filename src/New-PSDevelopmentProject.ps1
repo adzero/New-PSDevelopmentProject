@@ -36,7 +36,7 @@ Creates a new file structure for the development of a PowerShell script or modul
 Creates a new file structure for the development of a PowerShell script or module. 
 
 .EXAMPLE
-PS> New-PSDevelopmentProject.ps1 -Name NewScriptProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ScriptProject -Author Adzero -Description "My awesome new PowerShell script project !"
+PS> New-PSDevelopmentProject.ps1 -ScriptProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -Name NewScriptProject -Description "My awesome new PowerShell script project !" -Author AdZero
 
  
 
@@ -57,8 +57,11 @@ Mode                 LastWriteTime         Length Name
 d-----        02/03/2021     19:19                lib
 d-----        02/03/2021     19:19                bin
 
+
+Creates a new script project for a given author. 
+
 .EXAMPLE
-PS> New-PSDevelopmentProject.ps1 -Name NewModuleProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ModuleProject -Author Adzero -Description "My awesome new PowerShell module project !"
+PS> New-PSDevelopmentProject.ps1 -ModuleProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -Name NewModuleProject -Description "My awesome new PowerShell module project !" -Author Adzero
 
 
     Directory: D:\Temp\Modules\NewModuleProject
@@ -91,8 +94,11 @@ Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
 -a----        02/03/2021     19:23              0 about_NewModuleProject.help.txt
 
+
+Creates a new module project for a given author. 
+
 .EXAMPLE
-PS> New-PSDevelopmentProject.ps1 -Name NewModuleGitProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -ModuleProject -Author Adzero -Description "My awesome new PowerShell module project with a git repository !" -GitRepository
+PS> New-PSDevelopmentProject.ps1 -ModuleProject -RootPath C:\Users\adzero\Documents\WindowsPowerShell\Sources -Name NewModuleGitProject -Description "My awesome new PowerShell module project with a git repository !" -Author Adzero -GitRepository
 
 
     Directory: C:\Users\adzero\Documents\WindowsPowerShell\Sources\Modules\NewModuleGitProject
@@ -130,6 +136,9 @@ Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
 -a----        02/03/2021     19:28              0 about_NewModuleGitProject.help.txt
 
+
+Creates a new module project for a given author with a git repository. 
+
 .PARAMETER ScriptProject
 Use this option to create a project structure for a script.
 
@@ -137,19 +146,42 @@ Use this option to create a project structure for a script.
 Use this option to create a project structure for a module.
 
 .PARAMETER RootPath
-The root path where to create new project directory.
+The root path where to create new project directory :
+
+- Script projects will be located under a _Scripts_ directory.
+- Module projects will be located under a _Modules_ directory.
+
+If not specified, default value is "$($env:HOMEDRIVE)$($env:HOMEPATH)\Documents\WindowsPowerShell\".
+
+.PARAMETER DisableProjectCategoryFolder
+ Use this option to not include Modules or Scripts folder in the project root path.
+
+.PARAMETER FormatFile
+Use this option to add an object display format definition file.
+
+.PARAMETER TypeFile
+Use this option to add an extended type data definition file.
+
+.PARAMETER PesterTests
+Use this option to add a test folder with a default Pester script.
+
+.PARAMETER GitRepository
+Use this option to include a git repository for the project.
+
+First commit of the main branch only contains blank gitignore file.
+All files created, tracked and uncommited in a new dev branch.
 
 .PARAMETER Name
 Specifies the name of the script/module. Name should not contain spaces or invalid filename characters.
+
+.PARAMETER Description
+Specifies a description for the script/module.
 
 .PARAMETER Version
 Specifies the version of the script/module. Version should adhere to semantic versioning format. 
 
 .PARAMETER Author
 Specifies the script/module author.
-
-.PARAMETER Description
-Specifies a description for the script/module.
 
 .PARAMETER Guid
 Specifies a unique ID for the script/module.
@@ -188,6 +220,18 @@ Specifies the assembly (.dll) files that the module requires. Enter the assembly
 
 Use this parameter to list all the assemblies that the module requires, including assemblies that must be loaded to update any formatting or type files that are listed in the FormatsToProcess or TypesToProcess keys, even if those assemblies are also listed as binary modules in the NestedModules key.
 
+.PARAMETER FileList
+Specifies all items that are included in the module.
+
+This key is designed to act as a module inventory. The files listed in the key are included when the module is published, but any functions aren't automatically exported.
+
+.PARAMETER ModuleList
+Lists all modules that are included in this module.
+
+Enter each module name as a string or as a hash table with ModuleName and ModuleVersion keys. The hash table can also have an optional GUID key. You can combine strings and hash tables in the parameter value.
+
+This key is designed to act as a module inventory. The modules that are listed in the value of this key aren't automatically processed.
+
 .PARAMETER FunctionsToExport
 Specifies the functions that the module exports. Wildcards are permitted.
 
@@ -222,25 +266,10 @@ Specifies the Desired State Configuration (DSC) resources that the module export
 .PARAMETER CompatiblePSEditions
 Specifies the module's compatible PSEditions. For information about PSEdition, see Modules with compatible PowerShell Editions.
 
-.PARAMETER PrivateData
-Specifies data that is passed to the script/module.
-
 .PARAMETER DefaultCommandPrefix
 Specifies a prefix that is prepended to the nouns of all commands in the module when they're imported into a session. Enter a prefix string. Prefixes prevent command name conflicts in a user's session.
 
 Module users can override this prefix by specifying the Prefix parameter of the Import-Module cmdlet.
-
-.PARAMETER FileList
-Specifies all items that are included in the module.
-
-This key is designed to act as a module inventory. The files listed in the key are included when the module is published, but any functions aren't automatically exported.
-
-.PARAMETER ModuleList
-Lists all modules that are included in this module.
-
-Enter each module name as a string or as a hash table with ModuleName and ModuleVersion keys. The hash table can also have an optional GUID key. You can combine strings and hash tables in the parameter value.
-
-This key is designed to act as a module inventory. The modules that are listed in the value of this key aren't automatically processed.
 
 .PARAMETER ProcessorArchitecture
 Specifies the processor architecture that the module requires. Valid values are x86, AMD64, IA64, MSIL, and None (unknown or unspecified).
@@ -269,20 +298,8 @@ The HelpInfo XML file supports the Updatable Help feature that was introduced in
 
 For information about Updatable Help, see [about_Updatable_Help](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_updatable_help?view=powershell-7.4). For information about the HelpInfo XML file, see [Supporting Updatable Help](https://learn.microsoft.com/en-us/powershell/scripting/developer/module/supporting-updatable-help).
 
-.PARAMETER FormatFile
-Use this option to add an object display format definition file.
-
-.PARAMETER TypeFile
-Use this option to add an extended type data definition file.
-
-.PARAMETER PesterTests
-Use this option to add a test folder with a default Pester script.
-
-.PARAMETER GitRepository
-Use this option to include a git repository for the project.
-
-.PARAMETER DisableProjectCategoryFolder
- Use this option to not include Modules or Scripts folder in the project root path.
+.PARAMETER PrivateData
+Specifies data that is passed to the script/module.
 
 .PARAMETER Passthru
 Use this option to return the object representing the project directory.
@@ -321,6 +338,45 @@ Param(
 	[Parameter(ParameterSetName = "Module", Mandatory = $true, HelpMessage = "Use this option to create a project structure for a module.")]
 	[switch]
 	$ModuleProject,
+	[Parameter(HelpMessage = "The root path where to create new project directory.")]
+	[ValidateScript({ 
+
+			if ($_ -is [System.IO.FileSystemInfo])
+			{
+				$value = $_.FullName
+			}
+			elseif ([System.IO.Path]::IsPathRooted($_))
+			{
+				$value = [string]$_
+			}
+			else
+			{
+				$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
+			}
+
+			if (!(Test-Path -LiteralPath $value -PathType Container))
+			{
+				throw "Provided path is not a valid directory path: '$value'" 
+			}
+	
+			return $true
+		})]
+	$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",
+	[Parameter(HelpMessage = "Use this option to not include Modules or Scripts folder in the project root path.")]
+	[switch]
+	$DisableProjectCategoryFolder,
+	[Parameter(HelpMessage = "Use this option to add an object display format definition file.")]
+	[switch]
+	$FormatFile,
+	[Parameter(HelpMessage = "Use this option to add an extended type data definition file.")]
+	[switch]
+	$TypeFile,
+	[Parameter(HelpMessage = "Use this option to add a test folder with a default Pester script.")]
+	[switch]
+	$PesterTests,
+	[Parameter(HelpMessage = "Use this option to include a git repository for the project.")]
+	[switch]
+	$GitRepository,
 	[Parameter(Mandatory = $true, HelpMessage = "Specifies the name of the script/module. Name should not contain spaces or invalid filename characters.")]
 	[ValidateScript({$_ -inotmatch ([RegEx]::Escape([System.IO.Path]::GetInvalidFileNameChars()))})]
 	[string]
@@ -328,7 +384,7 @@ Param(
 	[Parameter(Mandatory = $true, HelpMessage = "Specifies a description for the script/module.")]
 	[string]
 	$Description,
-	[Parameter(HelpMessage = "Specifies the version of the script/module.")]
+	[Parameter(HelpMessage = "Specifies the version of the script/module. Version should conform to semantic versioning rules.")]
 	[ValidateScript({ $_ -imatch "^\d+\.\d+\.\d+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$" })]
 	[string]
 	$Version = "1.0.0",
@@ -398,9 +454,6 @@ Param(
 	[Parameter(HelpMessage = "A list of external modules that this module is depends on.")]
 	[string[]]
 	$ExternalModuleDependencies,
-	[Parameter(HelpMessage = "Specifies data that is passed to the script/module.")]
-	[hashtable]
-	$PrivateData,
 	[Parameter(ParameterSetName = "Module", HelpMessage = "Specifies the assembly (.dll) files that the module requires. Enter the assembly file names. PowerShell loads the specified assemblies before updating types or formats, importing nested modules, or importing the module file that is specified in the value of the RootModule key.`nUse this parameter to list all the assemblies that the module requires, including assemblies that must be loaded to update any formatting or type files that are listed in the FormatsToProcess or TypesToProcess keys, even if those assemblies are also listed as binary modules in the NestedModules key.")]
 	[string[]]
 	$RequiredAssemblies,
@@ -488,45 +541,9 @@ Param(
 	[ValidateScript({ $_ -imatch "^[1-9]\d*\.\d+(.\d+(\.\d+)?)?$" })]
 	[string]
 	$PowerShellHostVersion,
-	[Parameter(HelpMessage = "Use this option to add an object display format definition file.")]
-	[switch]
-	$FormatFile,
-	[Parameter(HelpMessage = "Use this option to add an extended type data definition file.")]
-	[switch]
-	$TypeFile,
-	[Parameter(HelpMessage = "Use this option to add a test folder with a default Pester script.")]
-	[switch]
-	$PesterTests,
-	[Parameter(HelpMessage = "Use this option to include a git repository for the project.")]
-	[switch]
-	$GitRepository,
-	[Parameter(HelpMessage = "Use this option to not include Modules or Scripts folder in the project root path.")]
-	[switch]
-	$DisableProjectCategoryFolder,
-	[Parameter(HelpMessage = "The root path where to create new project directory.")]
-	[ValidateScript({ 
-
-			if ($_ -is [System.IO.FileSystemInfo])
-			{
-				$value = $_.FullName
-			}
-			elseif ([System.IO.Path]::IsPathRooted($_))
-			{
-				$value = [string]$_
-			}
-			else
-			{
-				$value = (Join-Path -Path $PSScriptRoot -ChildPath [string]$_)
-			}
-
-			if (!(Test-Path -LiteralPath $value -PathType Container))
-			{
-				throw "Provided path is not a valid directory path: '$value'" 
-			}
-	
-			return $true
-		})]
-	$RootPath = "$([Environment]::GetFolderPath('MyDocuments'))\WindowsPowerShell\",	
+	[Parameter(HelpMessage = "Specifies data that is passed to the script/module.")]
+	[hashtable]
+	$PrivateData,
 	[Parameter(HelpMessage = "Use this option to return the object representing the project directory.")]
 	[switch]
 	$Passthru)
