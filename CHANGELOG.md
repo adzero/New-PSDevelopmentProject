@@ -27,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for WhatIf and Confirm parameters.
 - PowerShellGet 2.2.5+ module dependency added.
 
+### Removed
+
+- Removed Pester v1 tests file. 
+
 ## 1.1.0 - 2021-03-02
 
 ### Added
